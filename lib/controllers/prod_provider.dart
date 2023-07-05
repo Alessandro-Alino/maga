@@ -69,7 +69,7 @@ final prodFutureProvider = FutureProvider<List<ProductsModel>>((ref) async {
   //Call From the API
   debugPrint('Chiamata Prodotti ${ref.watch(pageProdAPI)}');
   final List response = await ref.watch(wcAPI).getAsync(
-      'wp-json/wc/v3/products?category=${ref.watch(categID)}&page=${ref.watch(pageProdAPI)}'); //&per_page=50
+      'wp-json/wc/v3/products?category=${ref.watch(categID)}&page=${ref.watch(pageProdAPI)}&per_page=50'); //&per_page=50
   //Response in a Temp List
   final newProductsList =
       response.map((e) => ProductsModel.fromJson(e)).toList();
