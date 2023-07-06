@@ -14,7 +14,6 @@ class HomePageMaga extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
         drawer: const MyDrawer(),
         body: RefreshIndicator(
           onRefresh: () {
@@ -28,8 +27,6 @@ class HomePageMaga extends ConsumerWidget {
             slivers: [
               const SliverAppBar(
                 title: Text('I-COM'),
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
               ),
               SliverAppBar(
                 automaticallyImplyLeading: false,
