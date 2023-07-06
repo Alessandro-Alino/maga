@@ -88,16 +88,7 @@ final prodFutureProvider = FutureProvider<List<ProductsModel>>((ref) async {
 //Creare Prodotto
 //
 final loadingProdBool = StateProvider<bool>((ref) => false);
-final creaProd = FutureProvider((ref) async {
-  Map data = {
-    "type": "simple",
-    "manage_stock": true,
-    "status": "draft",
-    "locations": [
-      {"id": 95, "quantity": 0},
-      {"id": 96, "quantity": 0}
-    ],
-  };
+final creaProd = FutureProvider.family<void, Map>((ref, data) async {
   try {
     await ref.watch(wcAPI).postAsync('wp-json/wc/v3/products', data);
   } catch (e) {

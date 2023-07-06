@@ -170,7 +170,7 @@ class HomePageMaga extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
-                isDismissible: ref.watch(creaProd).isLoading ? false : true,
+                isDismissible: ref.watch(loadingProdBool) ? false : true,
                 context: context,
                 builder: (context) {
                   return const ModalBottomAddProd();
@@ -197,7 +197,11 @@ class ModalBottomAddProd extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        ref.watch(loadingProdBool)
+                            ? null
+                            : Navigator.pop(context);
+                      },
                       child: const Text('Chiudi'))
                 ],
               ),
@@ -208,8 +212,17 @@ class ModalBottomAddProd extends ConsumerWidget {
                 Flexible(
                   child: GestureDetector(
                     onTap: () {
+                      Map data = {
+                        "type": "simple",
+                        "manage_stock": true,
+                        "status": "draft",
+                        "locations": [
+                          {"id": 95, "quantity": 0},
+                          {"id": 96, "quantity": 0}
+                        ],
+                      };
                       ref.read(loadingProdBool.notifier).state = true;
-                      ref.watch(creaProd.future).then((value) {
+                      ref.watch(creaProd(data).future).then((value) {
                         ref.read(loadingProdBool.notifier).state = false;
                         Navigator.pop(context);
                         ref.read(categID.notifier).state = 15;
@@ -224,7 +237,10 @@ class ModalBottomAddProd extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ref.watch(loadingProdBool)
-                                ? const CircularProgressIndicator()
+                                ? const SizedBox(
+                                    width: 25.0,
+                                    height: 25.0,
+                                    child: CircularProgressIndicator())
                                 : const Icon(Icons.phone_android),
                             const Text('Crea Prodotto')
                           ],
