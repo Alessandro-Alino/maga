@@ -27,6 +27,7 @@ class CategTemp {
 }
 
 final categID = StateProvider<int?>((ref) => null);
+final categParentID = StateProvider<int?>((ref) => null);
 
 final categProvider =
     StateNotifierProvider<CategCheckedNotifier, List<CategTemp>>((ref) {

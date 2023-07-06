@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
-import 'package:maga/controllers/gen_provider.dart';
+import 'package:maga/controllers/media_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
 import 'package:maga/models/products_model.dart';
+import 'package:maga/screens/add_media.dart';
 import 'package:maga/widgets/categs_selecter.dart';
 import 'package:maga/widgets/my_drawer.dart';
 import 'package:maga/widgets/prod_card.dart';
@@ -14,6 +16,9 @@ class HomePageMaga extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+        appBar: AppBar(
+          title: const Text('I-COM'),
+        ),
         drawer: const MyDrawer(),
         body: RefreshIndicator(
           onRefresh: () {
@@ -25,9 +30,6 @@ class HomePageMaga extends ConsumerWidget {
           },
           child: CustomScrollView(
             slivers: [
-              const SliverAppBar(
-                title: Text('I-COM'),
-              ),
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 expandedHeight: 250.0,
@@ -191,21 +193,6 @@ class ModalBottomAddProd extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        ref.watch(loadingProdBool)
-                            ? null
-                            : Navigator.pop(context);
-                      },
-                      child: const Text('Chiudi'))
-                ],
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -252,17 +239,234 @@ class ModalBottomAddProd extends ConsumerWidget {
                 Flexible(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
-                      ref.watch(scaffoldMex)!
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(ref
-                            .watch(snackProvider.notifier)
-                            .mySnackBar(
-                                Colors.amber.shade900,
-                                Icons.watch_later,
-                                Colors.white,
-                                'Funzione in Arrivo!',
-                                Colors.white));
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: Column(
+                                children: [
+                                  //Label
+                                  ListTile(
+                                    title: const Text(
+                                      'Crea nuova categoria',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.0),
+                                    ),
+                                    trailing: ElevatedButton(
+                                        onPressed: () {
+                                          //Create new Categ
+                                        },
+                                        child: const Text('CREA')),
+                                  ),
+                                  //DropDown Parent Categ
+                                  Consumer(builder: (BuildContext context,
+                                      WidgetRef ref, Widget? child) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton(
+                                          hint:
+                                              const Text('Categoria Genitore'),
+                                          value: ref.watch(categParentID) ==
+                                                  null
+                                              ? null
+                                              : ref
+                                                  .watch(categProvider)
+                                                  .singleWhere((e) =>
+                                                      e.id ==
+                                                      ref.watch(categParentID))
+                                                  .name,
+                                          isExpanded: true,
+                                          items: [
+                                            ...ref
+                                                .watch(categProvider)
+                                                .map((e) {
+                                              return DropdownMenuItem(
+                                                value: e.name,
+                                                onTap: () {
+                                                  ref
+                                                      .read(categParentID
+                                                          .notifier)
+                                                      .state = e.id;
+                                                },
+                                                child: Text(e.name),
+                                              );
+                                            })
+                                          ],
+                                          onChanged: (val) {}),
+                                    );
+                                  }),
+                                  //Image Categ
+                                  Consumer(builder: (BuildContext context,
+                                      WidgetRef ref, Widget? child) {
+                                    return Center(
+                                      child: Container(
+                                        height: 180.0,
+                                        width: 180.0,
+                                        margin:
+                                            const EdgeInsets.only(bottom: 16.0),
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            ref.watch(imagex).isNotEmpty
+                                                ? Center(
+                                                    child: Card(
+                                                      elevation: 5.0,
+                                                      child: SizedBox(
+                                                        height: 150.0,
+                                                        width: 150.0,
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            child:
+                                                                Image.network(
+                                                              height: 200,
+                                                              width: 200,
+                                                              ref
+                                                                  .watch(imagex)
+                                                                  .first
+                                                                  .sourceUrl,
+                                                              fit: BoxFit.cover,
+                                                              loadingBuilder:
+                                                                  (context,
+                                                                      child,
+                                                                      loadingProgress) {
+                                                                return loadingProgress ==
+                                                                        null
+                                                                    ? child
+                                                                    : const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator());
+                                                              },
+                                                              errorBuilder: (context,
+                                                                      error,
+                                                                      stackTrace) =>
+                                                                  const Center(
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .error),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Card(
+                                                      elevation: 5.0,
+                                                      child: SizedBox(
+                                                        height: 150.0,
+                                                        width: 150.0,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            width: 200.0,
+                                                            height: 200.0,
+                                                            imageUrl:
+                                                                'https://alealino.com/wp-content/uploads/woocommerce-placeholder.png',
+                                                            fit: BoxFit.cover,
+                                                            progressIndicatorBuilder:
+                                                                (context, url,
+                                                                        downloadProgress) =>
+                                                                    SizedBox(
+                                                              width: 100.0,
+                                                              height: 100.0,
+                                                              child: Center(
+                                                                child: CircularProgressIndicator(
+                                                                    value: downloadProgress
+                                                                        .progress),
+                                                              ),
+                                                            ),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Icon(Icons
+                                                                    .error),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                            //Mini FAB to Select image
+                                            Visibility(
+                                              visible:
+                                                  ref.watch(imagex).isEmpty,
+                                              child: Positioned(
+                                                bottom: 0.0,
+                                                right: 0.0,
+                                                child: FloatingActionButton(
+                                                  mini: true,
+                                                  heroTag: 'media',
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const AddMedia())).then(
+                                                        (value) {});
+                                                  },
+                                                  child: const Icon(Icons.add),
+                                                ),
+                                              ),
+                                            ),
+                                            //Icon to cancel imagex selected
+                                            Visibility(
+                                              visible:
+                                                  ref.watch(imagex).isNotEmpty,
+                                              child: Positioned(
+                                                  child: FloatingActionButton(
+                                                heroTag: 'delImagex',
+                                                mini: true,
+                                                backgroundColor: Colors.red,
+                                                onPressed: () {
+                                                  ref.watch(imagex).isEmpty
+                                                      ? null
+                                                      : ref
+                                                          .read(imageWPProvider
+                                                              .notifier)
+                                                          .deselectImageTemp();
+                                                },
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  //TextFieln Categ Name
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Nome Categoria',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).then((value) {
+                        //Clear CategParendID when close modal
+                        ref.read(categParentID.notifier).state = null;
+                        //Clear Imegex if Selected when close modal
+                        ref.watch(imagex).isEmpty
+                            ? null
+                            : ref
+                                .read(imageWPProvider.notifier)
+                                .deselectImageTemp();
+                      });
                     },
                     child: const Card(
                       elevation: 5.0,
