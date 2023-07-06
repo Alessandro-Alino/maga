@@ -156,6 +156,7 @@ class ProdCard extends ConsumerWidget {
       child: Stack(
         children: [
           Card(
+            elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -197,7 +198,7 @@ class ProdCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      //Name, Categ, Disp & Price
+                      //Name, Categ,
                       Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,7 +268,7 @@ class ProdCard extends ConsumerWidget {
                                                   .toString(),
                                           style: const TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18.0,
+                                              fontSize: 20.0,
                                               fontWeight: FontWeight.bold)),
                                     ],
                                   ),
@@ -295,7 +296,7 @@ class ProdCard extends ConsumerWidget {
                                                   .toString(),
                                           style: const TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18.0,
+                                              fontSize: 20.0,
                                               fontWeight: FontWeight.bold)),
                                     ],
                                   ),
@@ -314,7 +315,7 @@ class ProdCard extends ConsumerWidget {
                                         : '${prod.regularPrice} €',
                                     style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18.0,
+                                        fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -332,7 +333,7 @@ class ProdCard extends ConsumerWidget {
                                         : '${prod.salePrice} €',
                                     style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18.0,
+                                        fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -350,7 +351,7 @@ class ProdCard extends ConsumerWidget {
                   right: 20.0,
                   top: 20.0,
                   child: Container(
-                    width: 100.0,
+                    width: 80.0,
                     height: 30.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),

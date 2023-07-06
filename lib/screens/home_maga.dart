@@ -14,9 +14,7 @@ class HomePageMaga extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('I-COM'),
-        ),
+        extendBodyBehindAppBar: true,
         drawer: const MyDrawer(),
         body: RefreshIndicator(
           onRefresh: () {
@@ -28,6 +26,11 @@ class HomePageMaga extends ConsumerWidget {
           },
           child: CustomScrollView(
             slivers: [
+              const SliverAppBar(
+                title: Text('I-COM'),
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+              ),
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 expandedHeight: 250.0,
@@ -43,52 +46,54 @@ class HomePageMaga extends ConsumerWidget {
                   ),
                   title: //Category Selector
                       Card(
+                          elevation: 5.0,
                           child: ref.watch(categFutureProvider).when(
-                    data: (categs) {
-                      return ListTile(
-                        onTap: () {
-                          ref.watch(prodFutureProvider).isLoading
-                              ? null
-                              : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CategsSelecter(categs);
-                                  });
-                        },
-                        title: ref.watch(categID) == null
-                            ? const Text(
-                                'Seleziona una Categoria',
-                                overflow: TextOverflow.fade,
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            : Text(
-                                categs
-                                    .where((e) => e.id == ref.watch(categID))
-                                    .first
-                                    .name,
-                                overflow: TextOverflow.fade,
-                                style: const TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                        trailing: const Icon(Icons.catching_pokemon),
-                      );
-                    },
-                    error: (error, stackTrace) {
-                      return ListTile(
-                        title: const Text('Errore, Riprova'),
-                        onTap: () {},
-                      );
-                    },
-                    loading: () {
-                      return const ListTile(
-                        title: Text('Caricamento...'),
-                        trailing: CircularProgressIndicator(),
-                      );
-                    },
-                  )),
+                            data: (categs) {
+                              return ListTile(
+                                onTap: () {
+                                  ref.watch(prodFutureProvider).isLoading
+                                      ? null
+                                      : showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return CategsSelecter(categs);
+                                          });
+                                },
+                                title: ref.watch(categID) == null
+                                    ? const Text(
+                                        'Seleziona una Categoria',
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : Text(
+                                        categs
+                                            .where((e) =>
+                                                e.id == ref.watch(categID))
+                                            .first
+                                            .name,
+                                        overflow: TextOverflow.fade,
+                                        style: const TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                trailing: const Icon(Icons.catching_pokemon),
+                              );
+                            },
+                            error: (error, stackTrace) {
+                              return ListTile(
+                                title: const Text('Errore, Riprova'),
+                                onTap: () {},
+                              );
+                            },
+                            loading: () {
+                              return const ListTile(
+                                title: Text('Caricamento...'),
+                                trailing: CircularProgressIndicator(),
+                              );
+                            },
+                          )),
                 ),
               ),
               SliverToBoxAdapter(

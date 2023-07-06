@@ -110,25 +110,36 @@ class LoginPage extends ConsumerWidget {
                                     'Controlla la Connessione',
                                     Colors.white));
                         } else {
-                          ref.read(loginProvider.notifier).state = true;
-                          ref.watch(scaffoldMex)!
-                            ..removeCurrentSnackBar()
-                            ..showSnackBar(ref
-                                .watch(snackProvider.notifier)
-                                .mySnackBar(
-                                    Colors.green.shade700,
-                                    Icons.login,
-                                    Colors.white,
-                                    'Accesso eseguito',
-                                    Colors.white));
+                          ref.read(isLoading.notifier).state = true;
+                          Future.delayed(const Duration(seconds: 1), () {
+                            ref.read(isLoading.notifier).state = false;
+                            ref.read(loginProvider.notifier).state = true;
+                            ref.watch(scaffoldMex)!
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(ref
+                                  .watch(snackProvider.notifier)
+                                  .mySnackBar(
+                                      Colors.green.shade700,
+                                      Icons.login,
+                                      Colors.white,
+                                      'Accesso eseguito',
+                                      Colors.white));
+                          });
                         }
                       },
                       style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(100.0, 30.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text('Accedi')),
+                      child: ref.watch(isLoading)
+                          ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Text('Accedi')),
                 ],
               ),
             )

@@ -37,39 +37,69 @@ class CategsSelecter extends ConsumerWidget {
                         },
                         title: Text(categ.name),
                       )
-                    : ExpansionTile(title: Text(categ.name), children: [
-                        ...categChildList.map((e) {
-                          List<CategoriesModel> categChildx2List = categs
-                              .where((ele) => ele.parent == e.id)
-                              .toList();
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: ExpansionTile(
-                              title: Text(e.name),
-                              children: [
-                                ...categChildx2List.map((e) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: ListTile(
-                                      onTap: () {
-                                        //Clear list product when change categ
-                                        ref.watch(prodProvider).clear();
-                                        ref.read(categID.notifier).state = e.id;
-                                        ref.read(pageProdAPI.notifier).state =
-                                            1;
-                                        ref.read(noMoreProd.notifier).state =
-                                            false;
-                                        Navigator.pop(context);
-                                      },
+                    : GestureDetector(
+                        onLongPress: () {
+                          //Clear list product when change categ
+                          ref.watch(prodProvider).clear();
+                          ref.read(categID.notifier).state = categ.id;
+                          ref.read(pageProdAPI.notifier).state = 1;
+                          ref.read(noMoreProd.notifier).state = false;
+                          Navigator.pop(context);
+                        },
+                        child: ExpansionTile(
+                            title: Text(categ.name),
+                            backgroundColor: Colors.indigo,
+                            children: [
+                              ...categChildList.map((e) {
+                                List<CategoriesModel> categChildx2List = categs
+                                    .where((ele) => ele.parent == e.id)
+                                    .toList();
+                                return Container(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  margin: const EdgeInsets.all(4.0),
+                                  child: GestureDetector(
+                                    onLongPress: () {
+                                      //Clear list product when change categ
+                                      ref.watch(prodProvider).clear();
+                                      ref.read(categID.notifier).state = e.id;
+                                      ref.read(pageProdAPI.notifier).state = 1;
+                                      ref.read(noMoreProd.notifier).state =
+                                          false;
+                                      Navigator.pop(context);
+                                    },
+                                    child: ExpansionTile(
                                       title: Text(e.name),
+                                      children: [
+                                        ...categChildx2List.map((e) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
+                                            child: ListTile(
+                                              onTap: () {
+                                                //Clear list product when change categ
+                                                ref.watch(prodProvider).clear();
+                                                ref
+                                                    .read(categID.notifier)
+                                                    .state = e.id;
+                                                ref
+                                                    .read(pageProdAPI.notifier)
+                                                    .state = 1;
+                                                ref
+                                                    .read(noMoreProd.notifier)
+                                                    .state = false;
+                                                Navigator.pop(context);
+                                              },
+                                              title: Text(e.name),
+                                            ),
+                                          );
+                                        })
+                                      ],
                                     ),
-                                  );
-                                })
-                              ],
-                            ),
-                          );
-                        }),
-                      ]);
+                                  ),
+                                );
+                              }),
+                            ]),
+                      );
               }),
         ));
   }
