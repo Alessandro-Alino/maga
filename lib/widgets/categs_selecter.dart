@@ -47,8 +47,10 @@ class CategsSelecter extends ConsumerWidget {
                           Navigator.pop(context);
                         },
                         child: ExpansionTile(
-                            title: Text(categ.name),
-                            backgroundColor: Colors.indigo,
+                            title: Text(
+                              categ.name,
+                            ),
+                            iconColor: Colors.white,
                             children: [
                               ...categChildList.map((e) {
                                 List<CategoriesModel> categChildx2List = categs
