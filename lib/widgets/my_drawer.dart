@@ -64,6 +64,7 @@ class MyDrawer extends ConsumerWidget {
           endIndent: 10.0,
           indent: 10.0,
         ),
+        //Home
         ListTile(
           onTap: () {
             if (ref.watch(prodFutureProvider).isLoading) {
@@ -84,6 +85,17 @@ class MyDrawer extends ConsumerWidget {
           indent: 15.0,
           endIndent: 60.0,
         ),
+        //Categ Manager
+        ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.category),
+          title: const Text('Gestisci Categorie'),
+        ),
+        const Divider(
+          indent: 15.0,
+          endIndent: 60.0,
+        ),
+        //INFO
         ListTile(
           onTap: () {
             Navigator.pop(context);
@@ -119,6 +131,7 @@ class MyDrawer extends ConsumerWidget {
           indent: 15.0,
           endIndent: 60.0,
         ),
+        //LogOut
         ListTile(
           onTap: () {
             ref.read(loginProvider.notifier).state = false;

@@ -16,183 +16,191 @@ class AddMedia extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var connection = ref.watch(connectivityStatusProviders);
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton(
-              onPressed: () {
-                ref.watch(imagex).isEmpty
-                    ? null
-                    : ref.read(imageWPProvider.notifier).deselectImageTemp();
-              },
-              child: Row(
-                children: [
-                  Text('${ref.watch(imagex).length} Selezionata'),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            TextButton(
+                onPressed: () {
                   ref.watch(imagex).isEmpty
-                      ? const Icon(Icons.check_box_outline_blank)
-                      : const Icon(Icons.check_box)
-                ],
-              ))
-        ],
-      ),
-      body: RefreshIndicator(
-          onRefresh: () {
-            Future future = Future(
-              () => ref.watch(imageWPProvider.notifier).restart(ref),
-            );
-            return future;
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                //TextField Serch MEdia
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: TextFormField(
-                          controller: ref.watch(mediaTitleContr),
-                          //onChanged: (text) {
-                          //  ref
-                          //      .read(imageWPProvider.notifier)
-                          //      .searchMedia(text, ref);
-                          //},
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              label: Text('Cerca Media')),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      ActionChip(
-                          onPressed: () {
-                            if (ref.watch(mediaTitleContr).text.isEmpty) {
-                              ref.watch(scaffoldMex)!
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(ref
-                                    .watch(snackProvider.notifier)
-                                    .mySnackBar(
-                                        Colors.red.shade900,
-                                        Icons.dangerous,
-                                        Colors.white,
-                                        'Il Campo "cerca" non può essere Vuoto',
-                                        Colors.white));
-                            } else {
-                              ref.watch(imageWPProvider.notifier).restart(ref);
-                            }
-                          },
-                          avatar: const Icon(Icons.search),
-                          label: const Text('Cerca'))
-                    ],
-                  ),
-                ),
-                //Title
-                const ListTile(
-                    title: Text(
-                  'Tutti i Media',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-                //Grid of Media
-                connection == ConnectivityStatus.isConnected
-                    ? ref.watch(mediaFutureProvider).when(
-                          skipLoadingOnReload: true,
-                          data: (medias) {
-                            return Column(
-                              children: [
-                                GridView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: 5.0,
-                                      crossAxisSpacing: 5.0,
-                                    ),
-                                    itemCount: medias.length,
-                                    itemBuilder: (context, index) {
-                                      if (medias.isEmpty) {
-                                        return const Center(
-                                          child: Text('nessun Risultato'),
-                                        );
-                                      } else {
-                                        MediaWpModel media = medias[index];
-                                        return MediaCard(index, media: media);
-                                      }
-                                    }),
-                                //Load More Products
-                                Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ref
-                                            .watch(mediaFutureProvider)
-                                            .isLoading
-                                        ? const Center(
-                                            child: CircularProgressIndicator(),
-                                          )
-                                        : ref.watch(noMoreMedia)
-                                            ? const Text('Nessun altro Media')
-                                            : ActionChip(
-                                                avatar: const Icon(Icons.add),
-                                                label: const Text('Altro'),
-                                                onPressed: () {
-                                                  if (ref.watch(pageMediaAPI) ==
-                                                      ref.watch(
-                                                          pageMediaLimit)) {
-                                                    ref
-                                                        .read(noMoreMedia
-                                                            .notifier)
-                                                        .state = true;
-                                                  } else {
-                                                    ref
-                                                        .watch(imageWPProvider
-                                                            .notifier)
-                                                        .nextCallingMedia(ref);
-                                                  }
-                                                },
-                                              ))
-                              ],
-                            );
-                          },
-                          error: (error, stackTrace) => Center(
-                            child: Text('Errore $error, riprovare.'),
-                          ),
-                          loading: () => const Center(
-                            child: SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: CircularProgressIndicator()),
-                          ),
-                        )
-                    : const Center(
-                        child: Text('Sembra non ci sia Connessione 🤨'))
-              ],
-            ),
-          )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              //Navigator with animation from bottom
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const UploadMedia(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(0.0, 1.0);
-                  const end = Offset.zero;
-                  const curve = Curves.ease;
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
-                  return SlideTransition(
-                    position: animation.drive(tween),
-                    child: child,
-                  );
+                      ? null
+                      : ref.read(imageWPProvider.notifier).deselectImageTemp();
                 },
-              ));
-        },
-        child: const Icon(Icons.upload),
+                child: Row(
+                  children: [
+                    Text('${ref.watch(imagex).length} Selezionata'),
+                    ref.watch(imagex).isEmpty
+                        ? const Icon(Icons.check_box_outline_blank)
+                        : const Icon(Icons.check_box)
+                  ],
+                ))
+          ],
+        ),
+        body: RefreshIndicator(
+            onRefresh: () {
+              Future future = Future(
+                () => ref.watch(imageWPProvider.notifier).restart(ref),
+              );
+              return future;
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  //TextField Serch MEdia
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: TextFormField(
+                            controller: ref.watch(mediaTitleContr),
+                            //onChanged: (text) {
+                            //  ref
+                            //      .read(imageWPProvider.notifier)
+                            //      .searchMedia(text, ref);
+                            //},
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text('Cerca Media')),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ActionChip(
+                            onPressed: () {
+                              if (ref.watch(mediaTitleContr).text.isEmpty) {
+                                ref.watch(scaffoldMex)!
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(ref
+                                      .watch(snackProvider.notifier)
+                                      .mySnackBar(
+                                          Colors.red.shade900,
+                                          Icons.dangerous,
+                                          Colors.white,
+                                          'Il Campo "cerca" non può essere Vuoto',
+                                          Colors.white));
+                              } else {
+                                ref
+                                    .watch(imageWPProvider.notifier)
+                                    .restart(ref);
+                              }
+                            },
+                            avatar: const Icon(Icons.search),
+                            label: const Text('Cerca'))
+                      ],
+                    ),
+                  ),
+                  //Title
+                  const ListTile(
+                      title: Text(
+                    'Tutti i Media',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )),
+                  //Grid of Media
+                  connection == ConnectivityStatus.isConnected
+                      ? ref.watch(mediaFutureProvider).when(
+                            skipLoadingOnReload: true,
+                            data: (medias) {
+                              return Column(
+                                children: [
+                                  GridView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        mainAxisSpacing: 5.0,
+                                        crossAxisSpacing: 5.0,
+                                      ),
+                                      itemCount: medias.length,
+                                      itemBuilder: (context, index) {
+                                        if (medias.isEmpty) {
+                                          return const Center(
+                                            child: Text('nessun Risultato'),
+                                          );
+                                        } else {
+                                          MediaWpModel media = medias[index];
+                                          return MediaCard(index, media: media);
+                                        }
+                                      }),
+                                  //Load More Products
+                                  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ref
+                                              .watch(mediaFutureProvider)
+                                              .isLoading
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : ref.watch(noMoreMedia)
+                                              ? const Text('Nessun altro Media')
+                                              : ActionChip(
+                                                  avatar: const Icon(Icons.add),
+                                                  label: const Text('Altro'),
+                                                  onPressed: () {
+                                                    if (ref.watch(
+                                                            pageMediaAPI) ==
+                                                        ref.watch(
+                                                            pageMediaLimit)) {
+                                                      ref
+                                                          .read(noMoreMedia
+                                                              .notifier)
+                                                          .state = true;
+                                                    } else {
+                                                      ref
+                                                          .watch(imageWPProvider
+                                                              .notifier)
+                                                          .nextCallingMedia(
+                                                              ref);
+                                                    }
+                                                  },
+                                                ))
+                                ],
+                              );
+                            },
+                            error: (error, stackTrace) => Center(
+                              child: Text('Errore $error, riprovare.'),
+                            ),
+                            loading: () => const Center(
+                              child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator()),
+                            ),
+                          )
+                      : const Center(
+                          child: Text('Sembra non ci sia Connessione 🤨'))
+                ],
+              ),
+            )),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                //Navigator with animation from bottom
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const UploadMedia(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ));
+          },
+          child: const Icon(Icons.upload),
+        ),
       ),
     );
   }

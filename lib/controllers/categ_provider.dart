@@ -28,6 +28,11 @@ class CategTemp {
 
 final categID = StateProvider<int?>((ref) => null);
 final categParentID = StateProvider<int?>((ref) => null);
+final nameCategContr =
+    StateProvider<TextEditingController>((ref) => TextEditingController());
+final descCategContr =
+    StateProvider<TextEditingController>((ref) => TextEditingController());
+final loadCateg = StateProvider<bool>((ref) => false);
 
 final categProvider =
     StateNotifierProvider<CategCheckedNotifier, List<CategTemp>>((ref) {
@@ -108,4 +113,16 @@ final categFutureProvider = FutureProvider<List<CategoriesModel>>((ref) async {
     ref.read(categoriesList).addAll(newCategoriesList);
   }
   return ref.watch(categoriesList);
+});
+
+//
+//Creare Prodotto
+//
+final loadingCategBool = StateProvider<bool>((ref) => false);
+final creaCateg = FutureProvider.family<void, Map>((ref, data) async {
+  try {
+    await ref.watch(wcAPI).postAsync('wp-json/wc/v3/products/categories', data);
+  } catch (e) {
+    debugPrint('Error Create Categories ${e.toString()}');
+  }
 });

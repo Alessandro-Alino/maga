@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
+import 'package:maga/controllers/gen_provider.dart';
 import 'package:maga/controllers/media_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
+import 'package:maga/models/categories_model.dart';
 import 'package:maga/models/products_model.dart';
 import 'package:maga/screens/add_media.dart';
 import 'package:maga/widgets/categs_selecter.dart';
@@ -39,13 +41,26 @@ class HomePageMaga extends ConsumerWidget {
                   expandedTitleScale: 1.2,
                   centerTitle: true,
                   titlePadding: const EdgeInsets.all(0.0),
-                  background: Image.asset(
-                    'assets/images/image_logo_upscaled.png',
-                    fit: BoxFit.cover,
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        'assets/images/image_logo_upscaled.png',
+                        fit: BoxFit.cover,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                        ),
+                      ),
+                    ],
                   ),
                   title: //Category Selector
                       Card(
                           elevation: 5.0,
+                          color: ref.watch(isLightMode)
+                              ? CardTheme.of(context).color
+                              : Colors.blueGrey.shade800,
                           child: ref.watch(categFutureProvider).when(
                             data: (categs) {
                               return ListTile(
@@ -188,17 +203,32 @@ class ModalBottomAddProd extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final visible = StateProvider<bool>((ref) => false);
+
     return Container(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Consumer(
+                builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              return Visibility(
+                  visible: ref.watch(visible),
+                  child: const Flexible(
+                      child: Text('Tenere premuto per creare un Prod.')));
+            }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Flexible(
                   child: GestureDetector(
                     onTap: () {
+                      ref.read(visible.notifier).state = true;
+                      Future.delayed(const Duration(seconds: 3), () {
+                        ref.read(visible.notifier).state = false;
+                      });
+                    },
+                    onLongPress: () {
                       Map data = {
                         "type": "simple",
                         "manage_stock": true,
@@ -241,11 +271,12 @@ class ModalBottomAddProd extends ConsumerWidget {
                     onTap: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
+                          isDismissible: ref.read(loadCateg) ? false : true,
                           context: context,
                           builder: (context) {
                             return SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.5,
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   //Label
                                   ListTile(
@@ -256,10 +287,47 @@ class ModalBottomAddProd extends ConsumerWidget {
                                           fontSize: 20.0),
                                     ),
                                     trailing: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            elevation: 5.0),
                                         onPressed: () {
                                           //Create new Categ
+                                          Map data = {
+                                            "name":
+                                                ref.watch(nameCategContr).text,
+                                            "parent": ref.watch(categParentID),
+                                            "description":
+                                                ref.watch(descCategContr).text,
+                                            "image": [
+                                              for (final imageTemp in ref
+                                                  .watch(imageWPProvider)
+                                                  .where((e) => e.checked)
+                                                  .toList())
+                                                ImageCateg(
+                                                    id: imageTemp.id,
+                                                    src: imageTemp.sourceUrl,
+                                                    name: '',
+                                                    alt: '')
+                                            ],
+                                          };
+                                          ref.read(loadCateg.notifier).state =
+                                              true;
+                                          debugPrint(data.toString());
+                                          ref
+                                              .watch(creaCateg(data).future)
+                                              .then((value) {
+                                            //When Categ i Created
+                                            ref.read(loadCateg.notifier).state =
+                                                false;
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const HomePageMaga()));
+                                          });
                                         },
-                                        child: const Text('CREA')),
+                                        child: ref.watch(loadCateg)
+                                            ? const CircularProgressIndicator()
+                                            : const Text('CREA')),
                                   ),
                                   //DropDown Parent Categ
                                   Consumer(builder: (BuildContext context,
@@ -448,9 +516,23 @@ class ModalBottomAddProd extends ConsumerWidget {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextFormField(
+                                      controller: ref.watch(nameCategContr),
                                       decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         hintText: 'Nome Categoria',
+                                      ),
+                                    ),
+                                  ),
+                                  //Cate Description
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: //TextField Descrizione
+                                        TextFormField(
+                                      maxLines: 8,
+                                      controller: ref.watch(descCategContr),
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Descrizione',
                                       ),
                                     ),
                                   ),
@@ -466,6 +548,10 @@ class ModalBottomAddProd extends ConsumerWidget {
                             : ref
                                 .read(imageWPProvider.notifier)
                                 .deselectImageTemp();
+                        //Clear Name Categ when close modal
+                        ref.watch(nameCategContr).clear();
+                        //Clear Desc Categ when close modal
+                        ref.watch(descCategContr).clear();
                       });
                     },
                     child: const Card(

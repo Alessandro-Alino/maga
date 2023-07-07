@@ -318,7 +318,6 @@ class AddOrMod extends ConsumerWidget {
                 ),
               ),
             ),
-
             //TextFields Regina and Tagliamento Quantity
             const ListTile(
               title: Text(
