@@ -10,6 +10,7 @@ import 'package:maga/controllers/prod_provider.dart';
 import 'package:maga/models/categories_model.dart';
 import 'package:maga/models/products_model.dart';
 import 'package:maga/screens/add_media.dart';
+import 'package:maga/screens/home_maga.dart';
 
 class AddOrMod extends ConsumerWidget {
   const AddOrMod(this.prod, {super.key});
@@ -55,11 +56,17 @@ class AddOrMod extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             //Close AboutDialog
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Indietro')),
+                            Consumer(builder: (BuildContext context,
+                                WidgetRef ref, Widget? child) {
+                              return Visibility(
+                                visible: !ref.watch(isLoadingDelete),
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Indietro')),
+                              );
+                            }),
                             //Delete Product
                             ElevatedButton(
                               onPressed: () {
@@ -87,8 +94,11 @@ class AddOrMod extends ConsumerWidget {
                                     ref
                                         .read(prodProvider.notifier)
                                         .restart(ref);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomePageMaga()));
                                   });
                                 }
                               },

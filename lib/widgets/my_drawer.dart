@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
 import 'package:maga/controllers/gen_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
+import 'package:maga/screens/man_categ.dart';
 
 class MyDrawer extends ConsumerWidget {
   const MyDrawer({super.key});
@@ -87,7 +88,11 @@ class MyDrawer extends ConsumerWidget {
         ),
         //Categ Manager
         ListTile(
-          onTap: () {},
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ManagerCateg()));
+          },
           leading: const Icon(Icons.category),
           title: const Text('Gestisci Categorie'),
         ),
