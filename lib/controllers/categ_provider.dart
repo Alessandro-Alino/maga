@@ -126,3 +126,15 @@ final creaCateg = FutureProvider.family<void, Map>((ref, data) async {
     debugPrint('Error Create Categories ${e.toString()}');
   }
 });
+//
+//Aggiorna Prodotto
+//
+final updateCateg =
+    FutureProvider.family<void, CategoriesModel>((ref, categ) async {
+  try {
+    await ref.watch(wcAPI).postAsync(
+        'wp-json/wc/v3/products/categories/${categ.id}', categ.toJson());
+  } catch (e) {
+    debugPrint('Error Update Categories ${e.toString()}');
+  }
+});

@@ -8,7 +8,6 @@ class ShimmerLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
-      width: 10.0,
       height: 200.0,
       child: Shimmer.fromColors(
         baseColor: Colors.grey.shade200,

@@ -19,6 +19,13 @@ class HomePageMaga extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('I-COM'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  ref.read(categID.notifier).state = null;
+                },
+                icon: const Icon(Icons.dangerous))
+          ],
         ),
         drawer: const MyDrawer(),
         body: RefreshIndicator(
@@ -119,27 +126,42 @@ class HomePageMaga extends ConsumerWidget {
                           List<ProductsModel> prodList = data;
                           return Padding(
                             padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              children: [
+                            child:
                                 //List of Prod
-                                prodList.isEmpty
-                                    ? ref.watch(prodFutureProvider).isLoading
-                                        ? const SizedBox()
-                                        : const Text(
-                                            'Nessun Prodotto in questa Categoria 😢',
-                                            style: TextStyle(fontSize: 16.0),
-                                          )
-                                    : ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: prodList.length,
-                                        itemBuilder: (context, index) {
-                                          ProductsModel prod = prodList[index];
-                                          return ProdCard(
-                                            prod: prod,
-                                          );
-                                        }),
+                                Column(
+                              children: [
+                                //Categ isn't selcted
+                                ref.watch(categID) == null
+                                    ? const Center(
+                                        child: Text(
+                                            'Per iniziare, seleziona una categoria'),
+                                      )
+                                    :
+                                    //Categ selected but empty List Prod
+                                    prodList.isEmpty
+                                        ? ref
+                                                .watch(prodFutureProvider)
+                                                .isLoading
+                                            ? const SizedBox()
+                                            : const Text(
+                                                'Nessun Prodotto in questa Categoria 😢',
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              )
+                                        :
+                                        //List Prod
+                                        ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: prodList.length,
+                                            itemBuilder: (context, index) {
+                                              ProductsModel prod =
+                                                  prodList[index];
+                                              return ProdCard(
+                                                prod: prod,
+                                              );
+                                            }),
                                 //Button Next Calling
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -147,7 +169,17 @@ class HomePageMaga extends ConsumerWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       ref.watch(prodFutureProvider).isLoading
-                                          ? const CircularProgressIndicator()
+                                          ? Expanded(
+                                              child: ListView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: 10,
+                                                itemBuilder: (context, index) {
+                                                  return const ShimmerLoading();
+                                                },
+                                              ),
+                                            )
                                           : prodList.isEmpty
                                               ? const SizedBox()
                                               : ref.watch(noMoreProd)

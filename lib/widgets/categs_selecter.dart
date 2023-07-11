@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
+import 'package:maga/controllers/gen_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
 import 'package:maga/models/categories_model.dart';
 
@@ -46,61 +47,94 @@ class CategsSelecter extends ConsumerWidget {
                           ref.read(noMoreProd.notifier).state = false;
                           Navigator.pop(context);
                         },
-                        child: ExpansionTile(
-                            title: Text(
-                              categ.name,
-                            ),
-                            iconColor: Colors.white,
-                            children: [
-                              ...categChildList.map((e) {
-                                List<CategoriesModel> categChildx2List = categs
-                                    .where((ele) => ele.parent == e.id)
-                                    .toList();
-                                return Container(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  margin: const EdgeInsets.all(4.0),
-                                  child: GestureDetector(
-                                    onLongPress: () {
-                                      //Clear list product when change categ
-                                      ref.watch(prodProvider).clear();
-                                      ref.read(categID.notifier).state = e.id;
-                                      ref.read(pageProdAPI.notifier).state = 1;
-                                      ref.read(noMoreProd.notifier).state =
-                                          false;
-                                      Navigator.pop(context);
-                                    },
-                                    child: ExpansionTile(
-                                      title: Text(e.name),
-                                      children: [
-                                        ...categChildx2List.map((e) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
-                                            child: ListTile(
-                                              onTap: () {
-                                                //Clear list product when change categ
-                                                ref.watch(prodProvider).clear();
-                                                ref
-                                                    .read(categID.notifier)
-                                                    .state = e.id;
-                                                ref
-                                                    .read(pageProdAPI.notifier)
-                                                    .state = 1;
-                                                ref
-                                                    .read(noMoreProd.notifier)
-                                                    .state = false;
-                                                Navigator.pop(context);
-                                              },
-                                              title: Text(e.name),
-                                            ),
-                                          );
-                                        })
-                                      ],
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ExpansionTile(
+                              backgroundColor: ref.watch(isLightMode)
+                                  ? Colors.indigo.shade100
+                                  : Colors.indigo.shade700,
+                              collapsedBackgroundColor: ref.watch(isLightMode)
+                                  ? Colors.indigo.shade100
+                                  : Colors.indigo.shade700,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              collapsedShape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              title: Text(
+                                categ.name,
+                              ),
+                              children: [
+                                ...categChildList.map((e) {
+                                  List<CategoriesModel> categChildx2List =
+                                      categs
+                                          .where((ele) => ele.parent == e.id)
+                                          .toList();
+                                  return Container(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        //Clear list product when change categ
+                                        ref.watch(prodProvider).clear();
+                                        ref.read(categID.notifier).state = e.id;
+                                        ref.read(pageProdAPI.notifier).state =
+                                            1;
+                                        ref.read(noMoreProd.notifier).state =
+                                            false;
+                                        Navigator.pop(context);
+                                      },
+                                      child: ExpansionTile(
+                                        backgroundColor: ref.watch(isLightMode)
+                                            ? Colors.indigo.shade200
+                                            : Colors.indigo.shade900,
+                                        collapsedBackgroundColor:
+                                            ref.watch(isLightMode)
+                                                ? Colors.indigo.shade200
+                                                : Colors.indigo.shade900,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        collapsedShape:
+                                            const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                        title: Text(e.name),
+                                        children: [
+                                          ...categChildx2List.map((e) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: ListTile(
+                                                onTap: () {
+                                                  //Clear list product when change categ
+                                                  ref
+                                                      .watch(prodProvider)
+                                                      .clear();
+                                                  ref
+                                                      .read(categID.notifier)
+                                                      .state = e.id;
+                                                  ref
+                                                      .read(
+                                                          pageProdAPI.notifier)
+                                                      .state = 1;
+                                                  ref
+                                                      .read(noMoreProd.notifier)
+                                                      .state = false;
+                                                  Navigator.pop(context);
+                                                },
+                                                title: Text(e.name),
+                                              ),
+                                            );
+                                          })
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }),
-                            ]),
+                                  );
+                                }),
+                              ]),
+                        ),
                       );
               }),
         ));
