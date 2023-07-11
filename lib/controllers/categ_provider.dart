@@ -27,6 +27,8 @@ class CategTemp {
 }
 
 final categID = StateProvider<int?>((ref) => null);
+final categParentExpansion = StateProvider<int>((ref) => -1);
+final categChildExpansion = StateProvider<int>((ref) => -1);
 final categParentID = StateProvider<int?>((ref) => null);
 final nameCategContr =
     StateProvider<TextEditingController>((ref) => TextEditingController());
