@@ -9,7 +9,7 @@ import 'package:maga/widgets/categs_selecter.dart';
 import 'package:maga/widgets/modal_create_categ.dart';
 import 'package:maga/widgets/my_drawer.dart';
 import 'package:maga/widgets/prod_card.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:maga/widgets/shimmer_loading.dart';
 
 class HomePageMaga extends ConsumerWidget {
   const HomePageMaga({super.key});
@@ -23,11 +23,13 @@ class HomePageMaga extends ConsumerWidget {
         drawer: const MyDrawer(),
         body: RefreshIndicator(
           onRefresh: () {
-            Future future =
-                Future(() => ref.watch(prodProvider.notifier).restart(ref));
-            return ref.watch(prodFutureProvider).isLoading
-                ? Future(() {})
-                : future;
+            if (ref.watch(prodFutureProvider).isLoading) {
+              return Future(() => null);
+            } else {
+              Future future =
+                  Future(() => ref.watch(prodProvider.notifier).restart(ref));
+              return future;
+            }
           },
           child: CustomScrollView(
             slivers: [
@@ -181,22 +183,7 @@ class HomePageMaga extends ConsumerWidget {
                               shrinkWrap: true,
                               itemCount: 10,
                               itemBuilder: (context, index) {
-                                return SizedBox(
-                                  width: 200.0,
-                                  height: 100.0,
-                                  child: Shimmer.fromColors(
-                                    baseColor: Colors.red,
-                                    highlightColor: Colors.yellow,
-                                    child: const Text(
-                                      'Shimmer',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 40.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                );
+                                return const ShimmerLoading();
                               },
                             ),
                           );
