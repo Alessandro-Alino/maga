@@ -455,6 +455,7 @@ class AddOrMod extends ConsumerWidget {
                 child: ExpansionTile(
                   tilePadding: const EdgeInsets.only(left: 8.0),
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'Seo KeyWord',
@@ -477,10 +478,25 @@ class AddOrMod extends ConsumerWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: ref.watch(seoKWProdContr),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Seo KeyWord'),
-                        ),
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            label: const Text('Seo KeyWord'),
+                            suffixIcon: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: ActionChip(
+                                  onPressed: () {
+                                    ref.watch(seoKWProdContr).text ==
+                                            ref.watch(nameProdContr).text
+                                        ? null
+                                        : ref
+                                                .read(seoKWProdContr.notifier)
+                                                .state
+                                                .text =
+                                            ref.watch(nameProdContr).text;
+                                  },
+                                  label: const Icon(Icons.copy)),
+                            )),
                       ),
                     ),
                   ],
@@ -496,6 +512,7 @@ class AddOrMod extends ConsumerWidget {
                 child: ExpansionTile(
                   tilePadding: const EdgeInsets.only(left: 8.0),
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'Brand',
@@ -537,6 +554,7 @@ class AddOrMod extends ConsumerWidget {
                 child: ExpansionTile(
                   tilePadding: const EdgeInsets.only(left: 8.0),
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'EAN',
@@ -578,6 +596,7 @@ class AddOrMod extends ConsumerWidget {
                 child: ExpansionTile(
                   tilePadding: const EdgeInsets.only(left: 8.0),
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'GTIN',
@@ -600,17 +619,31 @@ class AddOrMod extends ConsumerWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: ref.watch(gtinProdContr),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('GTIN'),
-                        ),
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            label: const Text('GTIN'),
+                            suffixIcon: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: ActionChip(
+                                  onPressed: () {
+                                    ref.watch(gtinProdContr).text ==
+                                            ref.watch(eanProdContr).text
+                                        ? null
+                                        : ref
+                                                .read(gtinProdContr.notifier)
+                                                .state
+                                                .text =
+                                            ref.watch(eanProdContr).text;
+                                  },
+                                  label: const Icon(Icons.copy)),
+                            )),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-
             const Padding(padding: EdgeInsets.only(bottom: 80.0))
           ],
         ),
@@ -674,6 +707,7 @@ class AddOrMod extends ConsumerWidget {
                               name: '',
                               alt: '')
                       ],
+                //ADD HERE METADATA CONDITIONS
               );
               ref.read(loadingProdBool.notifier).state = true;
 

@@ -30,47 +30,22 @@ class ModalBottomCreateCateg extends ConsumerWidget {
               'Crea nuova categoria',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
-            trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 5.0),
-                onPressed: () {
-                  //Create Prod
-                  if (categ == null) {
-                  }
-                  //Update prod
-                  else {
-                    //Create new Categ
-                    Map data = {
-                      "name": ref.watch(nameCategContr).text,
-                      "parent": ref.watch(categParentID),
-                      "description": ref.watch(descCategContr).text,
-                      "image": [
-                        for (final imageTemp in ref
-                            .watch(imageWPProvider)
-                            .where((e) => e.checked)
-                            .toList())
-                          ImageCateg(
-                              id: imageTemp.id,
-                              src: imageTemp.sourceUrl,
-                              name: '',
-                              alt: '')
-                      ],
-                    };
-                    ref.read(loadCateg.notifier).state = true;
-                    debugPrint(data.toString());
-                    ref.watch(creaCateg(data).future).then((value) {
-                      //When Categ i Created
-                      ref.read(loadCateg.notifier).state = false;
-                      ref.read(categProvider.notifier).restart(ref);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePageMaga()));
-                    });
-                  }
-                },
-                child: ref.watch(loadCateg)
-                    ? const CircularProgressIndicator()
-                    : const Text('CREA')),
+            trailing: //Close Button
+                Visibility(
+                    visible: !ref.watch(loadingCategBool),
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.red,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )),
           ),
           const Divider(
             indent: 100.0,
@@ -294,6 +269,55 @@ class ModalBottomCreateCateg extends ConsumerWidget {
                 border: OutlineInputBorder(),
                 hintText: 'Descrizione',
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ActionChip(
+                    padding: const EdgeInsets.all(8.0),
+                    onPressed: () {
+                      //Create Prod
+                      if (categ == null) {
+                      }
+                      //Update prod
+                      else {
+                        //Create new Categ
+                        Map data = {
+                          "name": ref.watch(nameCategContr).text,
+                          "parent": ref.watch(categParentID),
+                          "description": ref.watch(descCategContr).text,
+                          "image": [
+                            for (final imageTemp in ref
+                                .watch(imageWPProvider)
+                                .where((e) => e.checked)
+                                .toList())
+                              ImageCateg(
+                                  id: imageTemp.id,
+                                  src: imageTemp.sourceUrl,
+                                  name: '',
+                                  alt: '')
+                          ],
+                        };
+                        ref.read(loadCateg.notifier).state = true;
+                        debugPrint(data.toString());
+                        ref.watch(creaCateg(data).future).then((value) {
+                          //When Categ i Created
+                          ref.read(loadCateg.notifier).state = false;
+                          ref.read(categProvider.notifier).restart(ref);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePageMaga()));
+                        });
+                      }
+                    },
+                    label: ref.watch(loadCateg)
+                        ? const CircularProgressIndicator()
+                        : const Text('CREA')),
+              ],
             ),
           ),
         ],

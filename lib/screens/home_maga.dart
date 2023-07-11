@@ -19,13 +19,6 @@ class HomePageMaga extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('I-COM'),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  ref.read(categID.notifier).state = null;
-                },
-                icon: const Icon(Icons.dangerous))
-          ],
         ),
         drawer: const MyDrawer(),
         body: RefreshIndicator(
@@ -340,7 +333,7 @@ class ModalBottomAddProd extends ConsumerWidget {
                     onTap: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
-                          isDismissible: ref.read(loadCateg) ? false : true,
+                          isDismissible: false,
                           context: context,
                           builder: (context) {
                             return const ModalBottomCreateCateg();
