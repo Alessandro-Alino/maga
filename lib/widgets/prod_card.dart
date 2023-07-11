@@ -153,219 +153,232 @@ class ProdCard extends ConsumerWidget {
           //ref.read(imageWPProvider.notifier).deselectImageTemp();
         });
       },
-      child: Stack(
+      child: Column(
         children: [
-          Card(
-            elevation: 3.0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          Stack(
+            children: [
+              Card(
+                color: ref.watch(isLightMode)
+                    ? Colors.indigo.shade100
+                    : Theme.of(context).cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
                     children: [
-                      //Image
-                      Hero(
-                        tag: prod.id,
-                        child: Card(
-                          elevation: 5.0,
-                          child: SizedBox(
-                            height: 100.0,
-                            width: 100.0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: CachedNetworkImage(
-                                width: 100.0,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Image
+                          Hero(
+                            tag: prod.id,
+                            child: Card(
+                              elevation: 5.0,
+                              child: SizedBox(
                                 height: 100.0,
-                                imageUrl: prod.images.isEmpty
-                                    ? 'https://alealino.com/wp-content/uploads/woocommerce-placeholder.png'
-                                    : '${prod.images.first.src}',
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        SizedBox(
-                                  width: 100.0,
-                                  height: 100.0,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
+                                width: 100.0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: CachedNetworkImage(
+                                    width: 100.0,
+                                    height: 100.0,
+                                    imageUrl: prod.images.isEmpty
+                                        ? 'https://alealino.com/wp-content/uploads/woocommerce-placeholder.png'
+                                        : '${prod.images.first.src}',
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder:
+                                        (context, url, downloadProgress) =>
+                                            SizedBox(
+                                      width: 100.0,
+                                      height: 100.0,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      //Name, Categ,
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //Name Prod
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                prod.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
-                              ),
+                          //Name, Categ,
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //Name Prod
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    prod.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0),
+                                  ),
+                                ),
+                                //Categories
+                                Container(
+                                  height: 20,
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: prod.categories.length,
+                                      itemBuilder: (context, index) {
+                                        Category categ = prod.categories[index];
+                                        return Text(
+                                          index == prod.categories.length - 1
+                                              ? categ.name
+                                              : '${categ.name}, ',
+                                          style: const TextStyle(
+                                            fontSize: 12.0,
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ],
                             ),
-                            //Categories
-                            Container(
-                              height: 20,
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: prod.categories.length,
-                                  itemBuilder: (context, index) {
-                                    Category categ = prod.categories[index];
-                                    return Text(
-                                      index == prod.categories.length - 1
-                                          ? categ.name
-                                          : '${categ.name}, ',
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        indent: 8.0,
+                        endIndent: 8.0,
+                      ),
+                      prod.locations!.isEmpty
+                          ? const Text('Sedi mancanti')
+                          :
+                          //Locations and Prices
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //Regina Stock
+                                Flexible(
+                                  child: Card(
+                                    color: const Color.fromARGB(
+                                        255, 247, 242, 249),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            'Regina',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          Text(
+                                              prod.locations![0] == null
+                                                  ? '0'
+                                                  : prod.locations![0]!.quantity
+                                                      .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold)),
+                                        ],
                                       ),
-                                    );
-                                  }),
-                            ),
-                          ],
-                        ),
-                      ),
+                                    ),
+                                  ),
+                                ),
+                                //Tagliam. Stock
+                                Flexible(
+                                  child: Card(
+                                    color: const Color.fromARGB(
+                                        255, 247, 242, 249),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            'Taglia',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          Text(
+                                              prod.locations![1] == null
+                                                  ? '0'
+                                                  : prod.locations![1]!.quantity
+                                                      .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                //Regular Price
+                                Flexible(
+                                  child: Card(
+                                    color: Colors.red.shade900,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        prod.regularPrice.isEmpty
+                                            ? '- €'
+                                            : '${prod.regularPrice} €',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                //Sales Price
+                                Flexible(
+                                  child: Card(
+                                    color: Colors.green.shade900,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        prod.salePrice.isEmpty
+                                            ? '- €'
+                                            : '${prod.salePrice} €',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                     ],
                   ),
-                  const Divider(
-                    indent: 8.0,
-                    endIndent: 8.0,
-                  ),
-                  prod.locations!.isEmpty
-                      ? const Text('Sedi mancanti')
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            //Regina Stock
-                            Flexible(
-                              child: Card(
-                                color: Colors.blueGrey.shade100,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text(
-                                        'Regina',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                          prod.locations![0] == null
-                                              ? '0'
-                                              : prod.locations![0]!.quantity
-                                                  .toString(),
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //Tagliam. Stock
-                            Flexible(
-                              child: Card(
-                                color: Colors.blueGrey.shade100,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text(
-                                        'Taglia',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                          prod.locations![1] == null
-                                              ? '0'
-                                              : prod.locations![1]!.quantity
-                                                  .toString(),
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //Regular Price
-                            Flexible(
-                              child: Card(
-                                color: Colors.red.shade900,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    prod.regularPrice.isEmpty
-                                        ? '- €'
-                                        : '${prod.regularPrice} €',
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //Sales Price
-                            Flexible(
-                              child: Card(
-                                color: Colors.green.shade900,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    prod.salePrice.isEmpty
-                                        ? '- €'
-                                        : '${prod.salePrice} €',
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                ],
+                ),
               ),
-            ),
+              //Badge if Prod is DRAFT
+              prod.status != 'publish'
+                  ? Positioned(
+                      right: 20.0,
+                      top: 20.0,
+                      child: Container(
+                        width: 80.0,
+                        height: 30.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.blueGrey,
+                        ),
+                        child: const Center(
+                            child: Text(
+                          'BOZZA',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        )),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
           ),
-          //Badge if Prod is DRAFT
-          prod.status != 'publish'
-              ? Positioned(
-                  right: 20.0,
-                  top: 20.0,
-                  child: Container(
-                    width: 80.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.blueGrey,
-                    ),
-                    child: const Center(
-                        child: Text(
-                      'BOZZA',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    )),
-                  ),
-                )
-              : const SizedBox(),
+          const SizedBox(
+            height: 10.0,
+          )
         ],
       ),
     );
