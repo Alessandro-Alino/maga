@@ -17,128 +17,104 @@ class ModalBottomCreateCateg extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          //Label
-          ListTile(
-            title: const Text(
-              'Crea nuova categoria',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            ),
-            trailing: //Close Button
-                Visibility(
-                    visible: !ref.watch(loadingCategBool),
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.red,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )),
-          ),
-          const Divider(
-            indent: 100.0,
-            endIndent: 100.0,
-          ),
+    //Lista delle immagini selezionate da passare al ImageSelected
+    final imageTemp = ref.watch(imageWPProvider);
+    final imageTempChecked = imageTemp.where((e) => e.checked).toList();
+    return SingleChildScrollView(
+      child: GestureDetector(
+        //Remove KeyBoard if it's open
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Label
+              ListTile(
+                title: const Text(
+                  'Crea nuova categoria',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+                trailing: //Close Button
+                    Visibility(
+                        visible: !ref.watch(loadingCategBool),
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.red,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+              ),
+              const Divider(
+                indent: 100.0,
+                endIndent: 100.0,
+              ),
 
-          //DropDown Parent Categ
-          const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Text(
-              'Categoria Genitore',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownButton(
-                  hint: const Text('Categoria Genitore'),
-                  value: ref.watch(categParentID) == null
-                      ? null
-                      : categ == null
-                          ? ref
-                              .watch(categProvider)
-                              .singleWhere(
-                                  (e) => e.id == ref.watch(categParentID))
-                              .name
-                          : categ!.parent == 0
-                              ? categ!.name
-                              : ref
+              //DropDown Parent Categ
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Categoria Genitore',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Consumer(builder:
+                  (BuildContext context, WidgetRef ref, Widget? child) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButton(
+                      hint: const Text('Categoria Genitore'),
+                      value: ref.watch(categParentID) == null
+                          ? null
+                          : categ == null
+                              ? ref
                                   .watch(categProvider)
                                   .singleWhere(
                                       (e) => e.id == ref.watch(categParentID))
-                                  .name,
-                  isExpanded: true,
-                  items: [
-                    ...ref.watch(categProvider).map((e) {
-                      return DropdownMenuItem(
-                        value: e.name,
-                        onTap: () {
-                          ref.read(categParentID.notifier).state = e.id;
-                        },
-                        child: Text(e.name),
-                      );
-                    })
-                  ],
-                  onChanged: (val) {}),
-            );
-          }),
-          //Image Categ
-          Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            return Center(
-              child: Container(
-                height: 180.0,
-                width: 180.0,
-                margin: const EdgeInsets.only(bottom: 16.0),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    ref.watch(imagex).isNotEmpty
-                        ? Center(
-                            child: Card(
-                              elevation: 5.0,
-                              child: SizedBox(
-                                height: 150.0,
-                                width: 150.0,
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.network(
-                                      height: 200,
-                                      width: 200,
-                                      ref.watch(imagex).first.sourceUrl,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        return loadingProgress == null
-                                            ? child
-                                            : const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                      },
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              const Center(
-                                        child: Icon(Icons.error),
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          )
-                        : categ == null
+                                  .name
+                              : categ!.parent == 0
+                                  ? categ!.name
+                                  : ref
+                                      .watch(categProvider)
+                                      .singleWhere((e) =>
+                                          e.id == ref.watch(categParentID))
+                                      .name,
+                      isExpanded: true,
+                      items: [
+                        ...ref.watch(categProvider).map((e) {
+                          return DropdownMenuItem(
+                            value: e.name,
+                            onTap: () {
+                              ref.read(categParentID.notifier).state = e.id;
+                            },
+                            child: Text(e.name),
+                          );
+                        })
+                      ],
+                      onChanged: (val) {}),
+                );
+              }),
+              //Image Categ
+              Consumer(builder:
+                  (BuildContext context, WidgetRef ref, Widget? child) {
+                return Center(
+                  child: Container(
+                    height: 180.0,
+                    width: 180.0,
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ref.watch(imagex).isNotEmpty
                             ? Center(
                                 child: Card(
                                   elevation: 5.0,
@@ -146,181 +122,246 @@ class ModalBottomCreateCateg extends ConsumerWidget {
                                     height: 150.0,
                                     width: 150.0,
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: CachedNetworkImage(
-                                        width: 200.0,
-                                        height: 200.0,
-                                        imageUrl:
-                                            'https://alealino.com/wp-content/uploads/woocommerce-placeholder.png',
-                                        fit: BoxFit.cover,
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
-                                                SizedBox(
-                                          width: 100.0,
-                                          height: 100.0,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                                value:
-                                                    downloadProgress.progress),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: Image.network(
+                                          height: 200,
+                                          width: 200,
+                                          ref.watch(imagex).first.sourceUrl,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            return loadingProgress == null
+                                                ? child
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  const Center(
+                                            child: Icon(Icons.error),
                                           ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ),
-                                    ),
+                                        )),
                                   ),
                                 ),
                               )
-                            : Center(
-                                child: Card(
-                                  elevation: 5.0,
-                                  child: SizedBox(
-                                    height: 150.0,
-                                    width: 150.0,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: CachedNetworkImage(
-                                        width: 200.0,
-                                        height: 200.0,
-                                        imageUrl: categ!.image!.src.toString(),
-                                        fit: BoxFit.cover,
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
+                            : categ == null
+                                ? Center(
+                                    child: Card(
+                                      elevation: 5.0,
+                                      child: SizedBox(
+                                        height: 150.0,
+                                        width: 150.0,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: CachedNetworkImage(
+                                            width: 200.0,
+                                            height: 200.0,
+                                            imageUrl:
+                                                'https://alealino.com/wp-content/uploads/woocommerce-placeholder.png',
+                                            fit: BoxFit.cover,
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
                                                 SizedBox(
-                                          width: 100.0,
-                                          height: 100.0,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                                value:
-                                                    downloadProgress.progress),
+                                              width: 100.0,
+                                              height: 100.0,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        value: downloadProgress
+                                                            .progress),
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
+                                      ),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Card(
+                                      elevation: 5.0,
+                                      child: SizedBox(
+                                        height: 150.0,
+                                        width: 150.0,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: CachedNetworkImage(
+                                            width: 200.0,
+                                            height: 200.0,
+                                            imageUrl:
+                                                categ!.image!.src.toString(),
+                                            fit: BoxFit.cover,
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
+                                                SizedBox(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        value: downloadProgress
+                                                            .progress),
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                    //Mini FAB to Select image
-                    Visibility(
-                      visible: ref.watch(imagex).isEmpty,
-                      child: Positioned(
-                        bottom: 0.0,
-                        right: 0.0,
-                        child: FloatingActionButton(
-                          mini: true,
-                          heroTag: 'media',
-                          onPressed: () {
-                            Navigator.push(
+                        //Mini FAB to Select image
+                        Visibility(
+                          visible: ref.watch(imagex).isEmpty,
+                          child: Positioned(
+                            bottom: 0.0,
+                            right: 0.0,
+                            child: FloatingActionButton(
+                              mini: true,
+                              heroTag: 'media',
+                              onPressed: () {
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const AddMedia()))
-                                .then((value) {});
-                          },
-                          child: const Icon(Icons.add),
+                                        builder: (context) =>
+                                            const AddMedia())).then((value) {});
+                              },
+                              child: const Icon(Icons.add),
+                            ),
+                          ),
                         ),
-                      ),
+                        //Icon to cancel imagex selected
+                        Visibility(
+                          visible: ref.watch(imagex).isNotEmpty,
+                          child: Positioned(
+                              child: FloatingActionButton(
+                            heroTag: 'delImagex',
+                            mini: true,
+                            backgroundColor: Colors.red,
+                            onPressed: () {
+                              ref.watch(imagex).isEmpty
+                                  ? null
+                                  : ref
+                                      .read(imageWPProvider.notifier)
+                                      .deselectImageTemp();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          )),
+                        )
+                      ],
                     ),
-                    //Icon to cancel imagex selected
-                    Visibility(
-                      visible: ref.watch(imagex).isNotEmpty,
-                      child: Positioned(
-                          child: FloatingActionButton(
-                        heroTag: 'delImagex',
-                        mini: true,
-                        backgroundColor: Colors.red,
+                  ),
+                );
+              }),
+              //TextField Categ Name
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: ref.watch(nameCategContr),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Nome Categoria',
+                  ),
+                ),
+              ),
+              //Categ Description
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  maxLines: 8,
+                  controller: ref.watch(descCategContr),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Descrizione',
+                  ),
+                ),
+              ),
+              //Button Create or Update Categ
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ActionChip(
+                        padding: const EdgeInsets.all(8.0),
                         onPressed: () {
-                          ref.watch(imagex).isEmpty
-                              ? null
-                              : ref
-                                  .read(imageWPProvider.notifier)
-                                  .deselectImageTemp();
+                          //Create Prod
+                          if (categ == null) {
+                            //Create new Categ
+                            Map data = {
+                              "name": ref.watch(nameCategContr).text,
+                              "parent": ref.watch(categParentID),
+                              "description": ref.watch(descCategContr).text,
+                              "image": [
+                                for (final imageTemp in ref
+                                    .watch(imageWPProvider)
+                                    .where((e) => e.checked)
+                                    .toList())
+                                  ImageCateg(
+                                      id: imageTemp.id,
+                                      src: imageTemp.sourceUrl,
+                                      name: '',
+                                      alt: '')
+                              ],
+                            };
+                            ref.read(loadCateg.notifier).state = true;
+                            debugPrint(data.toString());
+                            ref.watch(creaCateg(data).future).then((value) {
+                              //When Categ i Created
+                              ref.read(loadCateg.notifier).state = false;
+                              ref.read(categProvider.notifier).restart(ref);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomePageMaga()));
+                            });
+                          }
+                          //Update prod
+                          else {
+                            ImageCateg? image = imageTempChecked.isEmpty
+                                ? categ!.image
+                                : ImageCateg(
+                                    id: imageTempChecked[0].id,
+                                    src: imageTempChecked[0].sourceUrl,
+                                    name: '',
+                                    alt: '');
+
+                            CategoriesModel categUpdated = categ!.copyWith(
+                              name: ref.watch(nameCategContr).text,
+                              parent: ref.watch(categParentID),
+                              description: ref.watch(descCategContr).text,
+                              image: image,
+                            );
+                            ref
+                                .watch(updateCateg(categUpdated).future)
+                                .then((value) {
+                              ref.watch(categProvider.notifier).restart(ref);
+                              Navigator.pop(context);
+                            });
+                          }
                         },
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      )),
-                    )
+                        label: ref.watch(loadCateg)
+                            ? const CircularProgressIndicator()
+                            : categ == null
+                                ? const Text('CREA')
+                                : const Text('AGGIORNA')),
                   ],
                 ),
               ),
-            );
-          }),
-          //TextFieln Categ Name
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: ref.watch(nameCategContr),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Nome Categoria',
-              ),
-            ),
+            ],
           ),
-          //Cate Description
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              maxLines: 8,
-              controller: ref.watch(descCategContr),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Descrizione',
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ActionChip(
-                    padding: const EdgeInsets.all(8.0),
-                    onPressed: () {
-                      //Create Prod
-                      if (categ == null) {
-                      }
-                      //Update prod
-                      else {
-                        //Create new Categ
-                        Map data = {
-                          "name": ref.watch(nameCategContr).text,
-                          "parent": ref.watch(categParentID),
-                          "description": ref.watch(descCategContr).text,
-                          "image": [
-                            for (final imageTemp in ref
-                                .watch(imageWPProvider)
-                                .where((e) => e.checked)
-                                .toList())
-                              ImageCateg(
-                                  id: imageTemp.id,
-                                  src: imageTemp.sourceUrl,
-                                  name: '',
-                                  alt: '')
-                          ],
-                        };
-                        ref.read(loadCateg.notifier).state = true;
-                        debugPrint(data.toString());
-                        ref.watch(creaCateg(data).future).then((value) {
-                          //When Categ i Created
-                          ref.read(loadCateg.notifier).state = false;
-                          ref.read(categProvider.notifier).restart(ref);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePageMaga()));
-                        });
-                      }
-                    },
-                    label: ref.watch(loadCateg)
-                        ? const CircularProgressIndicator()
-                        : const Text('CREA')),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

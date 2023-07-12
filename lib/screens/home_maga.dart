@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
-import 'package:maga/controllers/gen_provider.dart';
 import 'package:maga/controllers/media_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
 import 'package:maga/models/products_model.dart';
@@ -59,9 +58,7 @@ class HomePageMaga extends ConsumerWidget {
                   //Category Selector
                   title: Card(
                       elevation: 5.0,
-                      color: ref.watch(isLightMode)
-                          ? Colors.blueGrey.shade100
-                          : Colors.blueGrey.shade600,
+                      color: Colors.blueGrey.shade600,
                       child: ref.watch(categFutureProvider).when(
                         data: (categs) {
                           return ListTile(
@@ -80,6 +77,7 @@ class HomePageMaga extends ConsumerWidget {
                                     overflow: TextOverflow.fade,
                                     style: TextStyle(
                                         fontSize: 20.0,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   )
                                 : Text(
@@ -91,9 +89,13 @@ class HomePageMaga extends ConsumerWidget {
                                     overflow: TextOverflow.fade,
                                     style: const TextStyle(
                                         fontSize: 20.0,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
-                            trailing: const Icon(Icons.catching_pokemon),
+                            trailing: const Icon(
+                              Icons.catching_pokemon,
+                              color: Colors.white,
+                            ),
                           );
                         },
                         error: (error, stackTrace) {
@@ -104,8 +106,15 @@ class HomePageMaga extends ConsumerWidget {
                         },
                         loading: () {
                           return const ListTile(
-                            title: Text('Caricamento...'),
-                            trailing: CircularProgressIndicator(),
+                            title: Text(
+                              'Caricamento...',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            trailing: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           );
                         },
                       )),
@@ -165,6 +174,7 @@ class HomePageMaga extends ConsumerWidget {
                                             itemBuilder: (context, index) {
                                               ProductsModel prod =
                                                   prodList[index];
+
                                               return ProdCard(
                                                 prod: prod,
                                               );
@@ -260,21 +270,25 @@ class ModalBottomAddProd extends ConsumerWidget {
             //Close Button
             Visibility(
                 visible: !ref.watch(loadingProdBool),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.red,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: Colors.red,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ])),
+                    )
+                  ]),
+                )),
             //Mex
             Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
