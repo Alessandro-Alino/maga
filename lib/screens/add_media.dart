@@ -47,7 +47,7 @@ class AddMedia extends ConsumerWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  //TextField Serch MEdia
+                  //TextField Serch Media
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -197,7 +197,11 @@ class AddMedia extends ConsumerWidget {
                       child: child,
                     );
                   },
-                ));
+                )).then((value) {
+              ref.watch(xFile) == null
+                  ? null
+                  : ref.read(xFile.notifier).state = null;
+            });
           },
           child: const Icon(Icons.upload),
         ),
@@ -216,12 +220,11 @@ class MediaCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        //ref.read(mediaNameContr.notifier).state.text = image.title.rendered;
-        //Navigator.push(context,
-        //        MaterialPageRoute(builder: (context) => ZoomMediaWPPage(image)))
-        //    .then((value) {
-        //  ref.read(mediaNameContr.notifier).state.clear();
-        //});
+        Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ZoomMediaWPPage(media)))
+            .then((value) {
+          ref.read(mediaNameContr.notifier).state.clear();
+        });
       },
       onLongPress: () {
         ref.watch(imagex).isEmpty
@@ -392,10 +395,161 @@ class UploadMedia extends ConsumerWidget {
       floatingActionButton: ref.watch(xFile) == null
           ? null
           : FloatingActionButton.extended(
-              onPressed: () {},
-              icon: const Icon(Icons.upload),
+              onPressed: () {
+                ref.read(isUploadMedia.notifier).state = true;
+                ref
+                    .watch(creaMedia(File(ref.watch(xFile)!.path)).future)
+                    .then((value) {
+                  ref.read(isUploadMedia.notifier).state = false;
+
+                  //Clean XFile selected
+                  ref.read(xFile.notifier).state = null;
+                  //Refresh image from Wordpress Media Dashborad
+                  ref.watch(imageWPProvider.notifier).restart(ref);
+                  Navigator.pop(context);
+                });
+              },
+              icon: ref.watch(isUploadMedia)
+                  ? const CircularProgressIndicator()
+                  : const Icon(Icons.upload),
               label: const Text('Carica'),
             ),
+    );
+  }
+}
+
+class ZoomMediaWPPage extends ConsumerWidget {
+  const ZoomMediaWPPage(this.media, {super.key});
+
+  final MediaWpModel media;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Eliminare questo File?'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('[${media.id}]'),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(media.title.rendered),
+                        ],
+                      ),
+                      actions: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //Close AboutDialog
+                            Consumer(builder: (BuildContext context,
+                                WidgetRef ref, Widget? child) {
+                              return Visibility(
+                                visible: !ref.watch(isLoadingDelete),
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Indietro')),
+                              );
+                            }),
+                            //Delete Product
+                            ElevatedButton(
+                              onPressed: () {
+                                if (ref.watch(connectivityStatusProviders) ==
+                                    ConnectivityStatus.isDisonnected) {
+                                  ref.watch(scaffoldMex)!
+                                    ..removeCurrentSnackBar()
+                                    ..showSnackBar(ref
+                                        .watch(snackProvider.notifier)
+                                        .mySnackBar(
+                                            Colors.yellow.shade800,
+                                            Icons.wifi_off,
+                                            Colors.white,
+                                            'Problemi di connessione',
+                                            Colors.white));
+                                } else {
+                                  //Delete Media
+                                  ref.read(isLoadingDelete.notifier).state =
+                                      true;
+                                  ref
+                                      .watch(deleteMedia(media.id).future)
+                                      .then((value) {
+                                    ref.read(isLoadingDelete.notifier).state =
+                                        false;
+                                    ref
+                                        .read(imageWPProvider.notifier)
+                                        .restart(ref);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(100.0, 10.0),
+                                backgroundColor: Colors.red.shade900,
+                              ),
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  return ref.watch(isLoadingDelete)
+                                      ? const Center(
+                                          child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : const Text(
+                                          'Elimina',
+                                          style: TextStyle(color: Colors.white),
+                                        );
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red.shade900,
+              ))
+        ],
+      ),
+      body: Center(
+        child: Hero(
+          tag: media.id,
+          child: CachedNetworkImage(
+            imageUrl: media.sourceUrl,
+            fit: BoxFit.cover,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                SizedBox(
+              width: 100.0,
+              height: 100.0,
+              child: Center(
+                child:
+                    CircularProgressIndicator(value: downloadProgress.progress),
+              ),
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ),
+      ),
     );
   }
 }

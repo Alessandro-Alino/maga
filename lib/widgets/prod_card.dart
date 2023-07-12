@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/categ_provider.dart';
 import 'package:maga/controllers/gen_provider.dart';
+import 'package:maga/controllers/media_provider.dart';
 import 'package:maga/controllers/prod_provider.dart';
 import 'package:maga/models/products_model.dart';
 import 'package:maga/screens/add_or_mod.dart';
@@ -149,8 +150,8 @@ class ProdCard extends ConsumerWidget {
           ref.read(brandProdContr.notifier).state.clear();
           //Categories List UnChecked
           ref.read(categProvider.notifier).allToggleFalse();
-          ////if Imagex Shoot or Selected, canceled from list
-          //ref.read(imageWPProvider.notifier).deselectImageTemp();
+          //if Imagex Shoot or Selected, canceled from list
+          ref.read(imageWPProvider.notifier).deselectImageTemp();
         });
       },
       child: Column(

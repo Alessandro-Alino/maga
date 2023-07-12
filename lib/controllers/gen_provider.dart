@@ -45,6 +45,7 @@ class SnackBarNotifier extends StateNotifier<SnackBar> {
     return SnackBar(
         behavior: SnackBarBehavior.floating,
         backgroundColor: bkColor,
+        duration: const Duration(milliseconds: 1500),
         content: Row(
           children: [
             Icon(

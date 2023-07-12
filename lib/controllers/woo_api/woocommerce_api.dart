@@ -220,7 +220,7 @@ class WooCommerceAPI {
         'application/json; charset=utf-8';
     request.headers[HttpHeaders.cacheControlHeader] = "no-cache";
     request.headers[HttpHeaders.authorizationHeader] =
-        'Basic ${base64Encode(utf8.encode('ale:3nz1 HSup St5r lo3Y FPwG yy1N'))}';
+        'Basic ${base64Encode(utf8.encode('fabio:fOiB tzyy 2f7S GttH qEZQ WfZ1'))}';
     String response =
         await client.send(request).then((res) => res.stream.bytesToString());
     var dataResponse = await json.decode(response);
