@@ -60,8 +60,8 @@ class HomePageMaga extends ConsumerWidget {
                   title: Card(
                       elevation: 5.0,
                       color: ref.watch(isLightMode)
-                          ? CardTheme.of(context).color
-                          : Colors.blueGrey.shade800,
+                          ? Colors.blueGrey.shade100
+                          : Colors.blueGrey.shade600,
                       child: ref.watch(categFutureProvider).when(
                         data: (categs) {
                           return ListTile(
@@ -125,9 +125,23 @@ class HomePageMaga extends ConsumerWidget {
                               children: [
                                 //Categ isn't selcted
                                 ref.watch(categID) == null
-                                    ? const Center(
-                                        child: Text(
-                                            'Per iniziare, seleziona una categoria'),
+                                    ? const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_upward,
+                                              size: 55.0,
+                                            ),
+                                            Text(
+                                              'Per iniziare, seleziona una categoria',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     :
                                     //Categ selected but empty List Prod
@@ -167,7 +181,7 @@ class HomePageMaga extends ConsumerWidget {
                                                 physics:
                                                     const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
-                                                itemCount: 10,
+                                                itemCount: 5,
                                                 itemBuilder: (context, index) {
                                                   return const ShimmerLoading();
                                                 },

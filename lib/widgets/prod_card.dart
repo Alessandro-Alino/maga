@@ -161,7 +161,7 @@ class ProdCard extends ConsumerWidget {
               Card(
                 color: ref.watch(isLightMode)
                     ? Colors.indigo.shade100
-                    : Theme.of(context).cardColor,
+                    : const Color.fromARGB(255, 56, 58, 91),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
