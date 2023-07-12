@@ -220,8 +220,10 @@ class MediaCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ZoomMediaWPPage(media)))
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ZoomMediaWPPage(media, index)))
             .then((value) {
           ref.read(mediaNameContr.notifier).state.clear();
         });
@@ -419,9 +421,10 @@ class UploadMedia extends ConsumerWidget {
 }
 
 class ZoomMediaWPPage extends ConsumerWidget {
-  const ZoomMediaWPPage(this.media, {super.key});
+  const ZoomMediaWPPage(this.media, this.index, {super.key});
 
   final MediaWpModel media;
+  final int index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -549,6 +552,35 @@ class ZoomMediaWPPage extends ConsumerWidget {
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'ImagexSelected',
+        backgroundColor: ref.watch(imageWPProvider)[index].checked
+            ? Colors.green
+            : Theme.of(context).floatingActionButtonTheme.backgroundColor,
+        icon: ref.watch(imageWPProvider)[index].checked
+            ? const Icon(Icons.check, color: Colors.white)
+            : const Icon(Icons.photo),
+        onPressed: () {
+          ref.watch(imagex).isEmpty
+              ? ref.read(imageWPProvider.notifier).toggle(ref, media.id)
+              : ref.watch(imageWPProvider)[index].checked
+                  ? ref.read(imageWPProvider.notifier).toggle(ref, media.id)
+                  : ref.watch(scaffoldMex)!.showSnackBar(ref
+                      .watch(snackProvider.notifier)
+                      .mySnackBar(
+                          Colors.red.shade800,
+                          Icons.block,
+                          Colors.white,
+                          'Un altro elemento è già selezionato!',
+                          Colors.white));
+        },
+        label: ref.watch(imageWPProvider)[index].checked
+            ? const Text(
+                'Selezionata',
+                style: TextStyle(color: Colors.white),
+              )
+            : const Text('Seleziona'),
       ),
     );
   }
