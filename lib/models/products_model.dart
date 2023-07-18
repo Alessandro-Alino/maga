@@ -799,6 +799,14 @@ class MetaDatum {
         "key": key,
         "value": value,
       };
+
+  MetaDatum copyWith({
+    int? id,
+    String? key,
+    dynamic value,
+  }) =>
+      MetaDatum(
+          id: id ?? this.id, key: key ?? this.key, value: value ?? this.value);
 }
 
 class ValueElement {

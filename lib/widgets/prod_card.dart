@@ -18,6 +18,9 @@ class ProdCard extends ConsumerWidget {
     List<Locations?>? locations = prod.locations;
     return GestureDetector(
       onTap: () {
+        //
+
+        //
         ref.read(statusProd.notifier).state = prod.status;
         ref.read(nameProdContr.notifier).state.text = prod.name;
         ref.read(descProdContr.notifier).state.text =

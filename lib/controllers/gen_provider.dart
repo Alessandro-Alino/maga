@@ -18,7 +18,7 @@ final wcAPI = StateProvider<WooCommerceAPI>((ref) => WooCommerceAPI(
 final isLightMode = StateProvider<bool>((ref) => true);
 //bool Login
 final loginProvider = StateProvider<bool>((ref) => false);
-//bool Login
+//bool Loading
 final isLoading = StateProvider<bool>((ref) => false);
 
 //ScaffoldMessage

@@ -696,16 +696,10 @@ class AddOrMod extends ConsumerWidget {
                             slug: categChecked.slug)
                     ],
                     locations: [
-                      Locations(
-                          id: prod.locations![0]!.id,
-                          name: prod.locations![0]!.name,
-                          slug: prod.locations![0]!.slug,
-                          quantity: ref.watch(reginaProdContr).text),
-                      Locations(
-                          id: prod.locations![1]!.id,
-                          name: prod.locations![1]!.name,
-                          slug: prod.locations![1]!.slug,
-                          quantity: ref.watch(tagliaProdContr).text),
+                      prod.locations![0]!
+                          .copyWith(quantity: ref.watch(reginaProdContr).text),
+                      prod.locations![1]!
+                          .copyWith(quantity: ref.watch(tagliaProdContr).text),
                     ],
                     images: imageTempChecked.isEmpty
                         ? prod.images
@@ -718,11 +712,7 @@ class AddOrMod extends ConsumerWidget {
                                   alt: '')
                           ],
                     //ADD HERE METADATA CONDITIONS
-                    metaData: [
-                      MetaDatum(
-                          key: '_yoast_wpseo_focuskw',
-                          value: ref.watch(seoKWProdContr).text)
-                    ]);
+                    metaData: []);
                 ref.read(loadingProdBool.notifier).state = true;
                 ref.watch(updateProd(prodMod).future).then((value) {
                   ref.read(loadingProdBool.notifier).state = false;
