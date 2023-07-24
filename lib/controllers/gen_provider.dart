@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maga/controllers/woo_api/woocommerce_api.dart';
 
-const String _url = 'https://www.icomroma.com/vendita/';
-const String _chiaveUtente = 'ck_5b8d75d64636f8685b78eab1d453710a6426cfd7';
-const String _chiaveSegreta = 'cs_a67030898709d55474dd7b70cbba4344325e5e49';
+const String _url = 'https://www.test.com/';
+const String _chiaveUtente = '';
+const String _chiaveSegreta = '';
 
-//const String _url = 'https://www.alealino.com/';
-//const String _chiaveUtente = 'ck_780f4b15863a06b663e30712b1cb428a538e7b8d';
-//const String _chiaveSegreta = 'cs_e1c06f43f2e5403b2293cde9fb27dcdb3c109ee6';
 
 //chiavi WooCommerce
 final wcAPI = StateProvider<WooCommerceAPI>((ref) => WooCommerceAPI(
