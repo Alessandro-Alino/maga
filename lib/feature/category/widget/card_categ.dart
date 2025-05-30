@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maga/feature/category/bloc/category_bloc.dart';
 import 'package:maga/feature/category/model/category.dart';
 import 'package:maga/feature/category/widget/categ_image.dart';
 import 'package:maga/feature/category/widget/popup_menu_categ.dart';
@@ -63,10 +65,28 @@ class _CardCategState extends State<CardCateg> {
                 softWrap: false,
                 overflow: TextOverflow.fade,
               ),
-              trailing: AnimatedOpacity(
-                duration: Durations.short1,
-                opacity: _hover.value == widget.categ ? 1.0 : 0.0,
-                child: PopupMenuCategory(category: widget.categ),
+              trailing: BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  return Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      // Loading Managed Categ
+                      if (state.manageStatus == ManageCategStatus.loading &&
+                          widget.categ.id == state.idCategManaged)
+                        SizedBox(
+                          width: 20.0,
+                          height: 20.0,
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      // PopUpMenu Button
+                      AnimatedOpacity(
+                        duration: Durations.short1,
+                        opacity: _hover.value == widget.categ ? 1.0 : 0.0,
+                        child: PopupMenuCategory(category: widget.categ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -76,7 +96,7 @@ class _CardCategState extends State<CardCateg> {
   }
 }
 
-// Card Categ for Removed Animation
+// Card Categ for Remove-Categ Animation
 class CardCategRemoved extends StatelessWidget {
   const CardCategRemoved({
     super.key,

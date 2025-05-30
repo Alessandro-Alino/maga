@@ -45,7 +45,7 @@ class ImageGrid extends StatelessWidget {
                         debugPrint('ID: ${image.id}');
                       },
                       onDoubleTap: () {
-                        context.read<ImageBloc>().selectImages(image: image);
+                        context.read<ImageBloc>().selectImage(image: image);
                         context.router.pop();
                       },
                       child: Stack(

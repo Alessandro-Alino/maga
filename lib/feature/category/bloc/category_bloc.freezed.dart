@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CategoryState {
 
- CategStatus get status; ManageCategStatus get manageStatus; List<CategModel> get fetchedCategoriesList; List<CategModel> get animatedCategoriesList; List<CategModel> get filterCategoriesList; int get totalCateg; int get pages; int get currentPage; String? get errorMessage;
+ CategStatus get status; ManageCategStatus get manageStatus; List<CategModel> get fetchedCategoriesList; List<CategModel> get animatedCategoriesList; List<CategModel> get filterCategoriesList; int get totalCateg; int get pages; int get currentPage; String? get errorMessage; int? get idCategManaged;
 /// Create a copy of CategoryState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $CategoryStateCopyWith<CategoryState> get copyWith => _$CategoryStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoryState&&(identical(other.status, status) || other.status == status)&&(identical(other.manageStatus, manageStatus) || other.manageStatus == manageStatus)&&const DeepCollectionEquality().equals(other.fetchedCategoriesList, fetchedCategoriesList)&&const DeepCollectionEquality().equals(other.animatedCategoriesList, animatedCategoriesList)&&const DeepCollectionEquality().equals(other.filterCategoriesList, filterCategoriesList)&&(identical(other.totalCateg, totalCateg) || other.totalCateg == totalCateg)&&(identical(other.pages, pages) || other.pages == pages)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoryState&&(identical(other.status, status) || other.status == status)&&(identical(other.manageStatus, manageStatus) || other.manageStatus == manageStatus)&&const DeepCollectionEquality().equals(other.fetchedCategoriesList, fetchedCategoriesList)&&const DeepCollectionEquality().equals(other.animatedCategoriesList, animatedCategoriesList)&&const DeepCollectionEquality().equals(other.filterCategoriesList, filterCategoriesList)&&(identical(other.totalCateg, totalCateg) || other.totalCateg == totalCateg)&&(identical(other.pages, pages) || other.pages == pages)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.idCategManaged, idCategManaged) || other.idCategManaged == idCategManaged));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,manageStatus,const DeepCollectionEquality().hash(fetchedCategoriesList),const DeepCollectionEquality().hash(animatedCategoriesList),const DeepCollectionEquality().hash(filterCategoriesList),totalCateg,pages,currentPage,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,manageStatus,const DeepCollectionEquality().hash(fetchedCategoriesList),const DeepCollectionEquality().hash(animatedCategoriesList),const DeepCollectionEquality().hash(filterCategoriesList),totalCateg,pages,currentPage,errorMessage,idCategManaged);
 
 @override
 String toString() {
-  return 'CategoryState(status: $status, manageStatus: $manageStatus, fetchedCategoriesList: $fetchedCategoriesList, animatedCategoriesList: $animatedCategoriesList, filterCategoriesList: $filterCategoriesList, totalCateg: $totalCateg, pages: $pages, currentPage: $currentPage, errorMessage: $errorMessage)';
+  return 'CategoryState(status: $status, manageStatus: $manageStatus, fetchedCategoriesList: $fetchedCategoriesList, animatedCategoriesList: $animatedCategoriesList, filterCategoriesList: $filterCategoriesList, totalCateg: $totalCateg, pages: $pages, currentPage: $currentPage, errorMessage: $errorMessage, idCategManaged: $idCategManaged)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $CategoryStateCopyWith<$Res>  {
   factory $CategoryStateCopyWith(CategoryState value, $Res Function(CategoryState) _then) = _$CategoryStateCopyWithImpl;
 @useResult
 $Res call({
- CategStatus status, ManageCategStatus manageStatus, List<CategModel> fetchedCategoriesList, List<CategModel> animatedCategoriesList, List<CategModel> filterCategoriesList, int totalCateg, int pages, int currentPage, String? errorMessage
+ CategStatus status, ManageCategStatus manageStatus, List<CategModel> fetchedCategoriesList, List<CategModel> animatedCategoriesList, List<CategModel> filterCategoriesList, int totalCateg, int pages, int currentPage, String? errorMessage, int? idCategManaged
 });
 
 
@@ -63,7 +63,7 @@ class _$CategoryStateCopyWithImpl<$Res>
 
 /// Create a copy of CategoryState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? manageStatus = null,Object? fetchedCategoriesList = null,Object? animatedCategoriesList = null,Object? filterCategoriesList = null,Object? totalCateg = null,Object? pages = null,Object? currentPage = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? manageStatus = null,Object? fetchedCategoriesList = null,Object? animatedCategoriesList = null,Object? filterCategoriesList = null,Object? totalCateg = null,Object? pages = null,Object? currentPage = null,Object? errorMessage = freezed,Object? idCategManaged = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CategStatus,manageStatus: null == manageStatus ? _self.manageStatus : manageStatus // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as List<CategModel>,totalCateg: null == totalCateg ? _self.totalCateg : totalCat
 as int,pages: null == pages ? _self.pages : pages // ignore: cast_nullable_to_non_nullable
 as int,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
 as int,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,idCategManaged: freezed == idCategManaged ? _self.idCategManaged : idCategManaged // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -85,7 +86,7 @@ as String?,
 
 
 class _CategoryState implements CategoryState {
-  const _CategoryState({required this.status, required this.manageStatus, required final  List<CategModel> fetchedCategoriesList, required final  List<CategModel> animatedCategoriesList, required final  List<CategModel> filterCategoriesList, required this.totalCateg, required this.pages, required this.currentPage, this.errorMessage}): _fetchedCategoriesList = fetchedCategoriesList,_animatedCategoriesList = animatedCategoriesList,_filterCategoriesList = filterCategoriesList;
+  const _CategoryState({required this.status, required this.manageStatus, required final  List<CategModel> fetchedCategoriesList, required final  List<CategModel> animatedCategoriesList, required final  List<CategModel> filterCategoriesList, required this.totalCateg, required this.pages, required this.currentPage, this.errorMessage, this.idCategManaged}): _fetchedCategoriesList = fetchedCategoriesList,_animatedCategoriesList = animatedCategoriesList,_filterCategoriesList = filterCategoriesList;
   
 
 @override final  CategStatus status;
@@ -115,6 +116,7 @@ class _CategoryState implements CategoryState {
 @override final  int pages;
 @override final  int currentPage;
 @override final  String? errorMessage;
+@override final  int? idCategManaged;
 
 /// Create a copy of CategoryState
 /// with the given fields replaced by the non-null parameter values.
@@ -126,16 +128,16 @@ _$CategoryStateCopyWith<_CategoryState> get copyWith => __$CategoryStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoryState&&(identical(other.status, status) || other.status == status)&&(identical(other.manageStatus, manageStatus) || other.manageStatus == manageStatus)&&const DeepCollectionEquality().equals(other._fetchedCategoriesList, _fetchedCategoriesList)&&const DeepCollectionEquality().equals(other._animatedCategoriesList, _animatedCategoriesList)&&const DeepCollectionEquality().equals(other._filterCategoriesList, _filterCategoriesList)&&(identical(other.totalCateg, totalCateg) || other.totalCateg == totalCateg)&&(identical(other.pages, pages) || other.pages == pages)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoryState&&(identical(other.status, status) || other.status == status)&&(identical(other.manageStatus, manageStatus) || other.manageStatus == manageStatus)&&const DeepCollectionEquality().equals(other._fetchedCategoriesList, _fetchedCategoriesList)&&const DeepCollectionEquality().equals(other._animatedCategoriesList, _animatedCategoriesList)&&const DeepCollectionEquality().equals(other._filterCategoriesList, _filterCategoriesList)&&(identical(other.totalCateg, totalCateg) || other.totalCateg == totalCateg)&&(identical(other.pages, pages) || other.pages == pages)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.idCategManaged, idCategManaged) || other.idCategManaged == idCategManaged));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,manageStatus,const DeepCollectionEquality().hash(_fetchedCategoriesList),const DeepCollectionEquality().hash(_animatedCategoriesList),const DeepCollectionEquality().hash(_filterCategoriesList),totalCateg,pages,currentPage,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,manageStatus,const DeepCollectionEquality().hash(_fetchedCategoriesList),const DeepCollectionEquality().hash(_animatedCategoriesList),const DeepCollectionEquality().hash(_filterCategoriesList),totalCateg,pages,currentPage,errorMessage,idCategManaged);
 
 @override
 String toString() {
-  return 'CategoryState(status: $status, manageStatus: $manageStatus, fetchedCategoriesList: $fetchedCategoriesList, animatedCategoriesList: $animatedCategoriesList, filterCategoriesList: $filterCategoriesList, totalCateg: $totalCateg, pages: $pages, currentPage: $currentPage, errorMessage: $errorMessage)';
+  return 'CategoryState(status: $status, manageStatus: $manageStatus, fetchedCategoriesList: $fetchedCategoriesList, animatedCategoriesList: $animatedCategoriesList, filterCategoriesList: $filterCategoriesList, totalCateg: $totalCateg, pages: $pages, currentPage: $currentPage, errorMessage: $errorMessage, idCategManaged: $idCategManaged)';
 }
 
 
@@ -146,7 +148,7 @@ abstract mixin class _$CategoryStateCopyWith<$Res> implements $CategoryStateCopy
   factory _$CategoryStateCopyWith(_CategoryState value, $Res Function(_CategoryState) _then) = __$CategoryStateCopyWithImpl;
 @override @useResult
 $Res call({
- CategStatus status, ManageCategStatus manageStatus, List<CategModel> fetchedCategoriesList, List<CategModel> animatedCategoriesList, List<CategModel> filterCategoriesList, int totalCateg, int pages, int currentPage, String? errorMessage
+ CategStatus status, ManageCategStatus manageStatus, List<CategModel> fetchedCategoriesList, List<CategModel> animatedCategoriesList, List<CategModel> filterCategoriesList, int totalCateg, int pages, int currentPage, String? errorMessage, int? idCategManaged
 });
 
 
@@ -163,7 +165,7 @@ class __$CategoryStateCopyWithImpl<$Res>
 
 /// Create a copy of CategoryState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? manageStatus = null,Object? fetchedCategoriesList = null,Object? animatedCategoriesList = null,Object? filterCategoriesList = null,Object? totalCateg = null,Object? pages = null,Object? currentPage = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? manageStatus = null,Object? fetchedCategoriesList = null,Object? animatedCategoriesList = null,Object? filterCategoriesList = null,Object? totalCateg = null,Object? pages = null,Object? currentPage = null,Object? errorMessage = freezed,Object? idCategManaged = freezed,}) {
   return _then(_CategoryState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CategStatus,manageStatus: null == manageStatus ? _self.manageStatus : manageStatus // ignore: cast_nullable_to_non_nullable
@@ -174,7 +176,8 @@ as List<CategModel>,totalCateg: null == totalCateg ? _self.totalCateg : totalCat
 as int,pages: null == pages ? _self.pages : pages // ignore: cast_nullable_to_non_nullable
 as int,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
 as int,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,idCategManaged: freezed == idCategManaged ? _self.idCategManaged : idCategManaged // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

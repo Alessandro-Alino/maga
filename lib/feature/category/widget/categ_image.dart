@@ -24,7 +24,11 @@ class CategImage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Image SRC
     String? imageSrc =
-        src == null || src!.isEmpty
+        (src == null || src!.isEmpty) ||
+                (imageModel != null &&
+                    imageModel!.guid.rendered.contains(
+                      'woocommerce-placeholder',
+                    ))
             ? 'https://grosmichel.it/wp-content/uploads/woocommerce-placeholder.png'
             : '$src';
 
@@ -60,11 +64,15 @@ class CategImage extends StatelessWidget {
                         value: downloadProgress.progress,
                       ),
                     ),
-                errorWidget: (context, url, error) => Center(
-                  child: IconButton(onPressed: (){
-                    log('Error Image: $error');
-                  },icon:Icon(Icons.error)),
-                ),
+                errorWidget:
+                    (context, url, error) => Center(
+                      child: IconButton(
+                        onPressed: () {
+                          log('Error Image [${imageModel?.id}]:  $error');
+                        },
+                        icon: Icon(Icons.error),
+                      ),
+                    ),
               ),
     );
   }

@@ -213,14 +213,24 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
     CategModel category,
   ) async {
-    emit(state.copyWith(manageStatus: ManageCategStatus.loading));
+    emit(
+      state.copyWith(
+        manageStatus: ManageCategStatus.loading,
+        idCategManaged: category.id,
+      ),
+    );
     try {
       final dynamic result = await categRepo.updateCategories(
         category.id as int,
         category.toJson(),
       );
       log('BLOC: Update Category: $result');
-      emit(state.copyWith(manageStatus: ManageCategStatus.success));
+      emit(
+        state.copyWith(
+          manageStatus: ManageCategStatus.success,
+          idCategManaged: null,
+        ),
+      );
       getCategories();
     } catch (e) {
       log('BLOC: Error to Update Category: $e');
@@ -228,6 +238,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         state.copyWith(
           manageStatus: ManageCategStatus.error,
           errorMessage: '$e',
+          idCategManaged: null,
         ),
       );
     }
@@ -239,11 +250,21 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
     CategModel category,
   ) async {
-    emit(state.copyWith(manageStatus: ManageCategStatus.loading));
+    emit(
+      state.copyWith(
+        manageStatus: ManageCategStatus.loading,
+        idCategManaged: category.id,
+      ),
+    );
     try {
       await categRepo.deleteCategories(category.id!);
       log('BLOC: Delete Category: ${category.id}');
-      emit(state.copyWith(manageStatus: ManageCategStatus.success));
+      emit(
+        state.copyWith(
+          manageStatus: ManageCategStatus.success,
+          idCategManaged: null,
+        ),
+      );
       getCategories();
     } catch (e) {
       log('BLOC: Error to Delete Category : $e');
@@ -251,6 +272,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         state.copyWith(
           manageStatus: ManageCategStatus.error,
           errorMessage: '$e',
+          idCategManaged: null,
         ),
       );
     }

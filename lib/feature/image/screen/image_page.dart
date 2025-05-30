@@ -44,8 +44,8 @@ class ImagePage extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             enableDrag: true,
-            showDragHandle: true,
             isScrollControlled: true,
+            backgroundColor: Colors.transparent,
             builder: (context) {
               return UploadImage();
             },

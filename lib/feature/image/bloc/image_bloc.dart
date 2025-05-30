@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -25,6 +27,9 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     on<_SelectImageEvent>(
       (event, emit) => _selectImage(event, emit, event.image),
     );
+    on<_ChooseImageEvent>(
+      (event, emit) => _chooseImage(event, emit, event.image, event.reset),
+    );
   }
 
   //-------------------------------//
@@ -39,8 +44,11 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   getOneImage({required int id}) => add(ImageEvent.getOneImage(id: id));
 
   // Select Images
-  selectImages({ImageModel? image}) =>
-      add(ImageEvent.selectImage(image: image));
+  selectImage({ImageModel? image}) => add(ImageEvent.selectImage(image: image));
+
+  // Choose Images
+  chooseImage({File? image, bool? reset}) =>
+      add(ImageEvent.chooseImage(image: image, reset: reset));
 
   //-------------------------------//
 
@@ -65,7 +73,6 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
         page: page,
         perPage: perPage,
       );
-      log('${response.realUri}');
       // Total number Image
       int totalImage = int.parse(
         response.headers.map.entries
@@ -154,6 +161,29 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     } else {
       log('Immagine rimossa');
       emit(state.copyWith(selectedImage: null));
+    }
+  }
+
+  // _Choose image
+  _chooseImage(
+    ImageEvent event,
+    Emitter<ImageState> emit,
+    File? image,
+    bool? reset,
+  ) async {
+    if (reset == true) {
+      emit(state.copyWith(choosedImage: null));
+    }
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      emit(state.copyWith(choosedImage: file));
+    } else {
+      // User canceled the picker
     }
   }
 }
