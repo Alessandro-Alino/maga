@@ -5,10 +5,7 @@ class ImageRepo {
   WooAPI api = WooAPI.instance;
 
   // Fetch all Images
-  Future<Response<dynamic>> getImages({
-    required int page,
-    required perPage,
-  }) async {
+  Future<Response> getImages({required int page, required perPage}) async {
     final response = await api.get(
       '/wp-json/wp/v2/media',
       queryParameters: {
@@ -21,19 +18,26 @@ class ImageRepo {
   }
 
   // Fetch ONE Images
-  Future<Response<dynamic>> getOneImage({required int id}) async {
+  Future<Response> getOneImage({required int id}) async {
     final response = await api.get('/wp-json/wp/v2/media/$id');
     return response;
   }
 
   // Post Image
-  Future<Response<dynamic>> postImages({required int page}) async {
+  Future<Response> uploadImages({
+    required List<int> imageBytes,
+    required String filename,
+  }) async {
     final response = await api.post(
       '/wp-json/wp/v2/media',
-      2,
-      queryParameters: {'page': page},
+      imageBytes,
+      options: Options(
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': 'attachment; filename="$filename"',
+        },
+      ),
     );
-    //log('REPO: $response');
     return response;
   }
 }

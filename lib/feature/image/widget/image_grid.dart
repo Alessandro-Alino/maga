@@ -41,11 +41,11 @@ class ImageGrid extends StatelessWidget {
                   itemBuilder: (context, index) {
                     ImageModel image = state.fetchedImageList[index];
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         debugPrint('ID: ${image.id}');
                       },
                       onDoubleTap: () {
-                        context.read<ImageBloc>().selectImages(image: image);
+                        context.read<ImageBloc>().selectImage(image: image);
                         context.router.pop();
                       },
                       child: Stack(

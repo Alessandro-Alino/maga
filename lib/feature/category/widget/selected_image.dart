@@ -30,7 +30,7 @@ class SelectedImage extends StatelessWidget {
                 right: 0.0,
                 child: GestureDetector(
                   onTap: () {
-                    context.read<ImageBloc>().selectImages(image: null);
+                    context.read<ImageBloc>().selectImage(image: null);
                   },
                   child: Container(
                     decoration: BoxDecoration(

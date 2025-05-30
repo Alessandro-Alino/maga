@@ -11,6 +11,7 @@ sealed class ImageState with _$ImageState {
     required int pages,
     required int currentPage,
     ImageModel? selectedImage,
+    File? choosedImage,
     String? errorMessage,
   }) = _ImageState;
 
@@ -23,6 +24,7 @@ sealed class ImageState with _$ImageState {
     totalImage: 0,
     pages: 0,
     selectedImage: null,
+    choosedImage: null,
     currentPage: 0,
   );
 }

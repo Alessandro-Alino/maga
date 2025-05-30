@@ -5,6 +5,7 @@ import 'package:maga/feature/image/bloc/image_bloc.dart';
 import 'package:maga/feature/image/widget/image_grid.dart';
 import 'package:maga/feature/image/widget/search_image_by_id.dart';
 import 'package:maga/feature/image/widget/upload_image.dart';
+import 'package:maga/widget/info_box.dart';
 
 @RoutePage()
 class ImagePage extends StatelessWidget {
@@ -18,9 +19,13 @@ class ImagePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Image'),
         actions: [
-          IconButton(onPressed: () {
-            context.read<ImageBloc>().getImages();
-          }, icon: const Icon(Icons.refresh)),
+          IconButton(
+            onPressed: () {
+              // Reload Image
+              context.read<ImageBloc>().getImages();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
           // Modal to search one image
           IconButton(
             onPressed: () {
@@ -38,14 +43,35 @@ class ImagePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(children: [Expanded(child: ImageGrid())]),
-      floatingActionButton: FloatingActionButton.extended(
+      body: Column(
+        children: [
+          // Info Box
+          BlocBuilder<ImageBloc, ImageState>(
+            builder: (context, state) {
+              return InfoBox(
+                total: state.totalImage,
+                pages: state.pages,
+                currentPage: state.currentPage,
+                listLength: state.filterImageList.length,
+                status: state.status == ImageStatus.loading,
+                onPressed: () {
+                  context.read<ImageBloc>().getImages();
+                },
+              );
+            },
+          ),
+          // Image Grid
+          Expanded(child: ImageGrid()),
+        ],
+      ),
+      floatingActionButton: // Upload FAB
+          FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(
             context: context,
             enableDrag: true,
-            showDragHandle: true,
             isScrollControlled: true,
+            backgroundColor: Colors.transparent,
             builder: (context) {
               return UploadImage();
             },

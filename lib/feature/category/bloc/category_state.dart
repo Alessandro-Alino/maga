@@ -12,6 +12,7 @@ sealed class CategoryState with _$CategoryState {
     required int pages,
     required int currentPage,
     String? errorMessage,
+    int? idCategManaged,
   }) = _CategoryState;
 
   static initState() => CategoryState(
@@ -20,10 +21,11 @@ sealed class CategoryState with _$CategoryState {
     fetchedCategoriesList: [],
     animatedCategoriesList: [],
     filterCategoriesList: [],
-    errorMessage: null,
     totalCateg: 0,
     pages: 0,
     currentPage: 0,
+    errorMessage: null,
+    idCategManaged: null,
   );
 }
 

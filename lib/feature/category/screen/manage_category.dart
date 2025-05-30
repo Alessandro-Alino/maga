@@ -93,7 +93,7 @@ class _ManageCategoryPageState extends State<ManageCategoryPage> {
 
   _unselectImage() {
     if (context.read<ImageBloc>().state.selectedImage != null) {
-      context.read<ImageBloc>().selectImages(image: null);
+      context.read<ImageBloc>().selectImage(image: null);
     }
   }
 
@@ -281,6 +281,8 @@ class _ManageCategoryPageState extends State<ManageCategoryPage> {
                           context.read<CategoryBloc>().updateCategory(
                             category: categUpdate,
                           );
+                          // Navigate Back
+                          context.router.pop();
                         }
                       }
                     },
