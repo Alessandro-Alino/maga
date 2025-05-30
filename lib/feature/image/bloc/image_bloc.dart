@@ -30,6 +30,9 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     on<_ChooseImageEvent>(
       (event, emit) => _chooseImage(event, emit, event.image, event.reset),
     );
+    on<_UploadImageEvent>(
+      (event, emit) => _uploadImage(event, emit, event.image),
+    );
   }
 
   //-------------------------------//
@@ -46,9 +49,13 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   // Select Images
   selectImage({ImageModel? image}) => add(ImageEvent.selectImage(image: image));
 
-  // Choose Images
+  // Choose Image
   chooseImage({File? image, bool? reset}) =>
       add(ImageEvent.chooseImage(image: image, reset: reset));
+
+  // Upload Image
+  uploadImage({required File image}) =>
+      add(ImageEvent.uploadImage(image: image));
 
   //-------------------------------//
 
@@ -171,19 +178,39 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     File? image,
     bool? reset,
   ) async {
+    // Reset Image
     if (reset == true) {
       emit(state.copyWith(choosedImage: null));
     }
+    // Choose Image
+    else {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        emit(state.copyWith(choosedImage: file));
+      }
+    }
+  }
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-
-    if (result != null) {
-      File file = File(result.files.single.path!);
-      emit(state.copyWith(choosedImage: file));
-    } else {
-      // User canceled the picker
+  // _upload Image
+  _uploadImage(ImageEvent event, Emitter<ImageState> emit, File image) async {
+    emit(state.copyWith(manageStatus: ManageImageStatus.loading));
+    try {
+      List<int> imageBytes = image.readAsBytesSync();
+      String fileName = image.path.split('\\').last;
+      await imageRepo.uploadImages(imageBytes: imageBytes, filename: fileName);
+      emit(state.copyWith(manageStatus: ManageImageStatus.success));
+      getImages();
+    } catch (e) {
+      log('BLOC: Error to Upload Image: $e');
+      emit(
+        state.copyWith(
+          manageStatus: ManageImageStatus.initial,
+          errorMessage: 'BLOC: Error to Upload Image: $e',
+        ),
+      );
     }
   }
 }

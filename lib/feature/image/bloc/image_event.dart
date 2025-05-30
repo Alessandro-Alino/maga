@@ -10,5 +10,9 @@ class ImageEvent with _$ImageEvent {
 
   const factory ImageEvent.selectImage({ImageModel? image}) = _SelectImageEvent;
 
-  const factory ImageEvent.chooseImage({File? image, bool? reset}) = _ChooseImageEvent;
+  const factory ImageEvent.chooseImage({File? image, bool? reset}) =
+      _ChooseImageEvent;
+
+  const factory ImageEvent.uploadImage({required File image}) =
+      _UploadImageEvent;
 }

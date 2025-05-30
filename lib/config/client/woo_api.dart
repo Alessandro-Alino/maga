@@ -34,7 +34,7 @@ class WooAPI {
   }
 
   // Generic GET
-  Future<Response<dynamic>> get(
+  Future<Response> get(
     String endpoint, {
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -50,25 +50,27 @@ class WooAPI {
   }
 
   // Generic POST
-  Future<dynamic> post(
+  Future<Response> post(
     String endpoint,
     dynamic data, {
+    Options? options,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final response = await _dio.post(
         endpoint,
         data: data,
+        options: options,
         queryParameters: queryParameters,
       );
-      return response.data;
+      return response;
     } on DioException catch (e) {
       throw WooException.fromDioError(e);
     }
   }
 
   // Generic PUT
-  Future<dynamic> put(
+  Future<Response> put(
     String endpoint,
     dynamic data, {
     Map<String, dynamic>? queryParameters,
@@ -79,20 +81,20 @@ class WooAPI {
         data: data,
         queryParameters: queryParameters,
       );
-      return response.data;
+      return response;
     } on DioException catch (e) {
       throw WooException.fromDioError(e);
     }
   }
 
   // Generic DELETE
-  Future<dynamic> delete(String endpoint) async {
+  Future<Response> delete(String endpoint) async {
     try {
       final response = await _dio.delete(
         endpoint,
         queryParameters: {'force': true},
       );
-      return response.data;
+      return response;
     } on DioException catch (e) {
       throw WooException.fromDioError(e);
     }

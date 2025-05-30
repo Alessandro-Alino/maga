@@ -5,7 +5,7 @@ class CategoryRepo {
   WooAPI api = WooAPI.instance;
 
   // Fetch all Categories
-  Future<Response<dynamic>> getCategories({
+  Future<Response> getCategories({
     required int page,
     required int perPage,
   }) async {
@@ -17,7 +17,7 @@ class CategoryRepo {
   }
 
   // Create Category
-  Future<dynamic> createCategories(Map<String, dynamic> category) async {
+  Future<Response> createCategories(Map<String, dynamic> category) async {
     final dynamic response = await api.post(
       '/wp-json/wc/v3/products/categories/',
       category,

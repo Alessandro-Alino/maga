@@ -94,7 +94,10 @@ class _UploadImageState extends State<UploadImage> {
               ),
             ),
             bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
               child: Row(
                 spacing: 8.0,
                 children: [
@@ -108,11 +111,33 @@ class _UploadImageState extends State<UploadImage> {
                     ),
                   ),
                   // Upload Photo
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: () {},
-                      child: const Text('Upload'),
-                    ),
+                  BlocConsumer<ImageBloc, ImageState>(
+                    listener: (context, state) {
+                      if (state.manageStatus == ManageImageStatus.success) {
+                        context.router.pop();
+                      }
+                    },
+                    builder: (context, state) {
+                      return Expanded(
+                        child: FilledButton(
+                          onPressed:
+                              state.manageStatus == ManageImageStatus.loading
+                                  ? null
+                                  : () {
+                                    if (state.choosedImage != null) {
+                                      context.read<ImageBloc>().uploadImage(
+                                        image: state.choosedImage!,
+                                      );
+                                    }
+                                  },
+                          child: Text(
+                            state.manageStatus == ManageImageStatus.loading
+                                ? 'Uploading...'
+                                : 'Upload',
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

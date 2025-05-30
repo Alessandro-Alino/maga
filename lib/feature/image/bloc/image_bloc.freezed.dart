@@ -508,4 +508,70 @@ as bool?,
 
 }
 
+/// @nodoc
+
+
+class _UploadImageEvent implements ImageEvent {
+  const _UploadImageEvent({required this.image});
+  
+
+ final  File image;
+
+/// Create a copy of ImageEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UploadImageEventCopyWith<_UploadImageEvent> get copyWith => __$UploadImageEventCopyWithImpl<_UploadImageEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UploadImageEvent&&(identical(other.image, image) || other.image == image));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,image);
+
+@override
+String toString() {
+  return 'ImageEvent.uploadImage(image: $image)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UploadImageEventCopyWith<$Res> implements $ImageEventCopyWith<$Res> {
+  factory _$UploadImageEventCopyWith(_UploadImageEvent value, $Res Function(_UploadImageEvent) _then) = __$UploadImageEventCopyWithImpl;
+@useResult
+$Res call({
+ File image
+});
+
+
+
+
+}
+/// @nodoc
+class __$UploadImageEventCopyWithImpl<$Res>
+    implements _$UploadImageEventCopyWith<$Res> {
+  __$UploadImageEventCopyWithImpl(this._self, this._then);
+
+  final _UploadImageEvent _self;
+  final $Res Function(_UploadImageEvent) _then;
+
+/// Create a copy of ImageEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? image = null,}) {
+  return _then(_UploadImageEvent(
+image: null == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
+as File,
+  ));
+}
+
+
+}
+
 // dart format on
