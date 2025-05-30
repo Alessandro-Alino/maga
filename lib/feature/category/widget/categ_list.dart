@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maga/feature/category/bloc/category_bloc.dart';
 import 'package:maga/feature/category/widget/animated_categ_list.dart';
-import 'package:maga/feature/category/widget/categ_info_box.dart';
+import 'package:maga/widget/info_box.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -63,11 +63,15 @@ class _CategoryListState extends State<CategoryList> {
                   ],
                 ),
                 // InfoBox
-                CategoryInfoBox(
+                InfoBox(
                   pages: state.pages,
-                  totalCateg: state.totalCateg,
+                  total: state.totalCateg,
                   currentPage: state.currentPage,
-                  categoryListLength: state.animatedCategoriesList.length,
+                  listLength: state.animatedCategoriesList.length,
+                  status: state.status == CategStatus.loading,
+                  onPressed: () {
+                    context.read<CategoryBloc>().getCategories();
+                  },
                 ),
                 // Categories List
                 _filterCntrl.text.isNotEmpty
