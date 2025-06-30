@@ -63,22 +63,44 @@ class _UploadImageState extends State<UploadImage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Image Selected
-                  Container(
-                    width: 300.0,
-                    height: 300.0,
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.cyan,
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: BlocBuilder<ImageBloc, ImageState>(
-                      builder: (context, state) {
-                        return state.choosedImage != null
-                            ? Image.file(state.choosedImage!)
-                            : const SizedBox.shrink();
-                      },
-                    ),
+                  BlocBuilder<ImageBloc, ImageState>(
+                    builder: (context, state) {
+                      return Container(
+                        width: 300.0,
+                        height: 300.0,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border:
+                              state.choosedImage != null
+                                  ? null
+                                  : Border.all(
+                                    width: 1.0,
+                                    color: Colors.blueGrey.shade200,
+                                  ),
+                          color: Colors.blueGrey.shade50,
+                          image:
+                              state.choosedImage == null
+                                  ? null
+                                  : DecorationImage(
+                                    image: FileImage(state.choosedImage!),
+                                    fit: BoxFit.cover,
+                                  ),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child:
+                            state.choosedImage != null
+                                ? null
+                                : Center(
+                                  child: Text(
+                                    'Seleziona immagine',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                      );
+                    },
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -86,7 +108,7 @@ class _UploadImageState extends State<UploadImage> {
                         onPressed: () {
                           _imageBloc.chooseImage();
                         },
-                        label: const Text('Seleziona Immagine'),
+                        label: const Text('Seleziona'),
                       ),
                     ],
                   ),

@@ -7,9 +7,10 @@ import 'package:maga/feature/image/bloc/image_bloc.dart';
 import 'package:maga/feature/image/model/image_model.dart';
 
 class ImageGrid extends StatelessWidget {
-  const ImageGrid({super.key, this.controller});
+  const ImageGrid({super.key, this.controller, this.onDoubleTap});
 
   final ScrollController? controller;
+  final void Function()? onDoubleTap;
 
   @override
   Widget build(BuildContext context) {
